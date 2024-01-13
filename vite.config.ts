@@ -11,7 +11,7 @@ export default defineConfig({
         registerType: 'autoUpdate',
         //Cache All Imports
         workbox: {
-            globPatterns: ["**/*"],
+            globPatterns: ["**/*", "**/*.PNG", "**/*.png"],
         },
         //Cache Static Assets
         includeAssets: [
