@@ -25,7 +25,7 @@ export const useUserDetailsContext = (): IUserDetailsContext => {
   //Methods
   const handleIsAuthenticated = (): Promise<any> => {
       //Fetch User Details
-      return fetch(`/api/self`, {
+      return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/self`, {
         method: "GET"
       })
       .then(res => {

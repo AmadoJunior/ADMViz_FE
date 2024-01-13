@@ -31,7 +31,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
     const formData = new FormData(event.currentTarget);
     if(formData.get("username") && formData.get("password")){
       setAuthProcessing(true);
-      fetch(`/api/perform_login`, {
+      fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/perform_login`, {
         method: "POST",
         body: formData,
       })

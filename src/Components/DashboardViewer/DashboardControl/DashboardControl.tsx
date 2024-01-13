@@ -70,7 +70,7 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({dashboards, setDash
 
   //Form Handlers
   const handleNew = (dashboardName: string) => {
-    return fetch(`/api/dashboards`, {
+    return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -106,7 +106,7 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({dashboards, setDash
 
   const handleRemove = (dashboardId: number) => {
     setRemoveLoading(true);
-    fetch(`/api/dashboards/${dashboardId}`, {
+    fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards/${dashboardId}`, {
       method: "DELETE",
     })
       .then(res => {
