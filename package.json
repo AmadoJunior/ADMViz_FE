@@ -32,7 +32,6 @@
     "react-use-draggable-scroll": "^0.4.7",
     "socket.io-client": "^4.7.2",
     "styled-components": "^5.3.11",
-    "typescript": "^4.9.5",
     "use-query-params": "^2.2.1",
     "uuid": "^9.0.0",
     "vite": "^5.0.2",
@@ -68,6 +67,7 @@
     "@types/colormap": "^2.3.2",
     "@types/luxon": "^3.3.1",
     "@types/uuid": "^9.0.2",
+    "typescript": "^5.3.3",
     "vite-plugin-comlink": "^3.0.5",
     "vite-plugin-pwa": "^0.17.2"
   }
