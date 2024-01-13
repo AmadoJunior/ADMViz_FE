@@ -1,0 +1,75 @@
+{
+  "name": "server-benchmark",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.11.1",
+    "@emotion/styled": "^11.11.0",
+    "@mui/icons-material": "^5.14.3",
+    "@mui/lab": "^5.0.0-alpha.153",
+    "@mui/material": "^5.14.5",
+    "@mui/styled-engine-sc": "^5.12.0",
+    "@mui/x-date-pickers": "^6.11.2",
+    "@react-hook/passive-layout-effect": "^1.2.1",
+    "@react-hook/resize-observer": "^1.2.6",
+    "@types/react": "^18.2.20",
+    "@types/react-dom": "^18.2.7",
+    "@vitejs/plugin-react": "^4.2.0",
+    "chart.js": "^4.3.3",
+    "chartjs-plugin-autocolors": "^0.2.2",
+    "chartjs-plugin-datalabels": "^2.2.0",
+    "colormap": "^2.3.2",
+    "comlink": "^4.4.1",
+    "luxon": "^3.4.0",
+    "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
+    "react-dnd": "^16.0.1",
+    "react-dnd-html5-backend": "^16.0.1",
+    "react-dom": "^18.2.0",
+    "react-hot-toast": "^2.4.1",
+    "react-router-dom": "^6.19.0",
+    "react-use": "^17.4.0",
+    "react-use-draggable-scroll": "^0.4.7",
+    "socket.io-client": "^4.7.2",
+    "styled-components": "^5.3.11",
+    "typescript": "^4.9.5",
+    "use-query-params": "^2.2.1",
+    "uuid": "^9.0.0",
+    "vite": "^5.0.2",
+    "vite-tsconfig-paths": "^4.2.1",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "vite",
+    "build": "tsc && vite build",
+    "move": "xcopy \"C:\\Users\\adm27\\Documents\\Java_Projects\\cruddemoauto\\src\\main\\app\\build\\\" \"C:\\Users\\adm27\\Documents\\Java_Projects\\cruddemoauto\\src\\main\\resources\\static\\\" /s /y",
+    "bundle": "tsc && vite build && xcopy \"C:\\Users\\adm27\\Documents\\Java_Projects\\cruddemoauto\\src\\main\\app\\dist\\\" \"C:\\Users\\adm27\\Documents\\Java_Projects\\cruddemoauto\\src\\main\\resources\\static\\\" /s /y",
+    "preview": "vite preview"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "@types/colormap": "^2.3.2",
+    "@types/luxon": "^3.3.1",
+    "@types/uuid": "^9.0.2",
+    "vite-plugin-comlink": "^3.0.5",
+    "vite-plugin-pwa": "^0.17.2"
+  },
+  "proxy": "http://localhost:8080"
+}
