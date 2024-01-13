@@ -5,12 +5,12 @@ import React from "react";
 import {Box, Typography} from "@mui/material";
 
 //Images
-import Input from "./../../Assets/Input.png";
-import Fetch from "./../../Assets/Fetch.png";
-import Output from "./../../Assets/Output.png";
-import DashboardControl from "./../../Assets/DashboardControl.png";
-import ChartSettings from "./../../Assets/ChartSettings.png";
-import ChartControl from "./../../Assets/ChartControl.png";
+import Input from "./../../Images/Input.png";
+import Fetch from "./../../Images/Fetch.png";
+import Output from "./../../Images/Output.png";
+import DashboardControl from "./../../Images/DashboardControl.png";
+import ChartSettings from "./../../Images/ChartSettings.png";
+import ChartControl from "./../../Images/ChartControl.png";
 
 //Props
 interface IAboutProps {
