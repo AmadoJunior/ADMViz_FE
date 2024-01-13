@@ -11,12 +11,12 @@ export default defineConfig({
         registerType: 'autoUpdate',
         //Cache All Imports
         workbox: {
-            globPatterns: ["**/*", "**/*.PNG", "**/*.png"],
+            globPatterns: ["**/*", "**/*.png"],
         },
         //Cache Static Assets
         includeAssets: [
             "**/*",
-            "**/*.PNG"
+            "**/*.png"
         ],
         manifest: {
             name: 'ADMViz',
@@ -44,7 +44,7 @@ export default defineConfig({
     worker: {
         plugins: () => [comlink()],
     },
-    assetsInclude: ["**/*.PNG"],
+    assetsInclude: ["**/*.png"],
     server: {    
         // this ensures that the browser opens upon server start
         open: true,
