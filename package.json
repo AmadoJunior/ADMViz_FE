@@ -36,7 +36,10 @@
     "uuid": "^9.0.0",
     "vite": "^5.0.2",
     "vite-tsconfig-paths": "^4.2.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "typescript": "^5.3.3",
+    "vite-plugin-comlink": "^3.0.5",
+    "vite-plugin-pwa": "^0.17.2"
   },
   "scripts": {
     "start": "vite",
@@ -66,9 +69,6 @@
   "devDependencies": {
     "@types/colormap": "^2.3.2",
     "@types/luxon": "^3.3.1",
-    "@types/uuid": "^9.0.2",
-    "typescript": "^5.3.3",
-    "vite-plugin-comlink": "^3.0.5",
-    "vite-plugin-pwa": "^0.17.2"
+    "@types/uuid": "^9.0.2"
   }
 }
