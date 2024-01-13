@@ -16,6 +16,7 @@ export default defineConfig({
         //Cache Static Assets
         includeAssets: [
             "**/*",
+            "**/*.PNG"
         ],
         manifest: {
             name: 'ADMViz',
