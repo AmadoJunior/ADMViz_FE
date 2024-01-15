@@ -1,12 +1,15 @@
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import react from '@vitejs/plugin-react'
 import { comlink } from 'vite-plugin-comlink'
 import { VitePWA } from 'vite-plugin-pwa'
 import viteTsconfigPaths from 'vite-tsconfig-paths'
 
-export default defineConfig({
+export default defineConfig(({mode}) => {
+    const env = loadEnv(mode, process.cwd(), '');
+
+    return {
     // depending on your application, base can also be "/"
-    base: '',
+    base: '/',
     plugins: [comlink(), react(), VitePWA({
         registerType: 'autoUpdate',
         //Cache All Imports
@@ -46,22 +49,21 @@ export default defineConfig({
     },
     assetsInclude: ["**/*.png"],
     server: {    
-        // this ensures that the browser opens upon server start
         open: true,
-        // this sets a default port to 3000  
-        port: 3000, 
         proxy: {
             '/api': {
-                target: 'http://localhost:8080',
-                changeOrigin: true
+                target: `http://${env.VITE_API_ENDPOINT}`,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '/api/'),
             },
             '/sdr': {
-                target: 'http://localhost:8080',
-                changeOrigin: true
+                target: `http://${env.VITE_API_ENDPOINT}`,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/sdr/, '/sdr/'),
             },
         }
     },
     build: {
         assetsDir: "static",
     }
-})
+}})

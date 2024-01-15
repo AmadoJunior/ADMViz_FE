@@ -76,7 +76,7 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({demo}): JSX.Element => {
 
   //API Helpers
   const fetchDashboards = (userId: number) => {
-    fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/sdr/users/${userId}/dashboards`, {
+    fetch(`/sdr/users/${userId}/dashboards`, {
       method: "GET",
     })
     .then(res => {

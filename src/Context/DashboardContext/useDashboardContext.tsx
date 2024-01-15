@@ -35,17 +35,6 @@ export const DashboardContext = createContext<IDashboardContext>({
 //JSON
 import {demoCharts} from "../../Demo/demoCharts";
 
-const loadJson = (
-  fileName: string
-): Promise<IChart[]> => {
-  console.log("Loading JSON")
-  return new Promise<IChart[]>((res) => {
-    import(`./../../Demo/${fileName}`).then((data) => {
-      res(data?.default);
-    });
-  });
-};
-
 interface IDashboardContextHookProps {
   userId: number,
   dashboardId: number,
@@ -62,7 +51,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
 
   //Methods
   const updateChartDetails = (chartId: number, chartDetails: IChartDetails): Promise<void> => {
-    return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards/${dashboardId}/charts/${chartId}`, {
+    return fetch(`/api/dashboards/${dashboardId}/charts/${chartId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -102,7 +91,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
       return updatedCharts;
     })
     
-    return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards/${dashboardId}/charts/${chartId}/position`, {
+    return fetch(`/api/dashboards/${dashboardId}/charts/${chartId}/position`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -120,7 +109,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
   }
 
   const insertChart = (chartDetails: IChartDetails, chartPosition?: ChartPosition): Promise<void> => {
-    return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards/${dashboardId}/charts`, {
+    return fetch(`/api/dashboards/${dashboardId}/charts`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -152,7 +141,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
   }
 
   const removeChart = (chartId: number): Promise<void> => {
-    return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/dashboards/${dashboardId}/charts/${chartId}`, {
+    return fetch(`/api/dashboards/${dashboardId}/charts/${chartId}`, {
       method: "DELETE"
     })
     .then((res) => {
@@ -178,7 +167,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
   }
 
   const getCharts = () => {
-    fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/sdr/dashboards/${dashboardId}/charts`, {
+    fetch(`/sdr/dashboards/${dashboardId}/charts`, {
       method: "GET"
     })
     .then(res => {

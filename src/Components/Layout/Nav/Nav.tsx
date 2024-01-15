@@ -88,7 +88,7 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
   //Logout Handler
   const handleLogout = () => {
     setLogoutLoading(true);
-    fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/perform_logout`)
+    fetch(`/api/perform_logout`)
     .then(response => {
       if(response.status === 200){
         toast.success("Successfull Logout");
