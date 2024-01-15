@@ -31,7 +31,10 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
   const [name, setName] = React.useState<string>("");
   const [srcUrl, setSrcUrl] = React.useState<string>("");
   const [dataKey, setDataKey] = React.useState<string>("");
-  const [apiKey, setApiKey] = React.useState("");
+  const [select, setSelect] = React.useState<string | undefined>();
+  const [where, setWhere] = React.useState<string | undefined>();
+  const [group, setGroup] = React.useState<string | undefined>();
+  const [limit, setLimit] = React.useState<string | undefined>();
   const [labelKey, setLabelKey] = React.useState<string>("");
   const [method, setMethod] = React.useState<string>("GET");
   const [chartType, setChartType] = React.useState<string>(ChartType.LINE);
@@ -50,7 +53,10 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         setName(curChart?.details?.name);
         setSrcUrl(curChart?.details?.srcUrl);
         setDataKey(curChart?.details?.dataKey);
-        setApiKey(curChart?.details?.apiKey);
+        setSelect(curChart?.details?.select);
+        setWhere(curChart?.details?.where);
+        setGroup(curChart?.details?.group);
+        setLimit(curChart?.details?.limit);
         setLabelKey(curChart?.details?.labelKey);
         setMethod(curChart?.details?.method);
         setChartType(curChart?.details?.chartType);
@@ -81,9 +87,21 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
     setLabelKey(e?.currentTarget?.value);
   };
 
-  const handleApiKey = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     e.preventDefault();
-    setApiKey(e?.currentTarget?.value);
+    setSelect(e?.currentTarget?.value);
+  };
+  const handleWhere = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setWhere(e?.currentTarget?.value);
+  };
+  const handleGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setGroup(e?.currentTarget?.value);
+  };
+  const handleLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setLimit(e?.currentTarget?.value);
   };
 
   const handleMethod = (e: SelectChangeEvent<string>) => {
@@ -105,7 +123,10 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       labelKey,
       chartType,
       method,
-      apiKey,
+      select,
+      where,
+      group,
+      limit,
       fromDate,
       toDate
     })
@@ -155,9 +176,24 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
             handler={handleDataKey}
         ></CustomInput>
         <CustomInput 
-            title="API Key"
-            value={apiKey}
-            handler={handleApiKey}
+            title="Select"
+            value={select}
+            handler={handleSelect}
+        ></CustomInput>
+        <CustomInput 
+            title="Where"
+            value={where}
+            handler={handleWhere}
+        ></CustomInput>
+        <CustomInput 
+            title="Group"
+            value={group}
+            handler={handleGroup}
+        ></CustomInput>
+        <CustomInput 
+            title="Limit"
+            value={limit}
+            handler={handleLimit}
         ></CustomInput>
         <CustomInput 
             title="Label Key"

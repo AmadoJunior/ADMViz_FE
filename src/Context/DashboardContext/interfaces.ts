@@ -20,11 +20,14 @@ export type ChartPosition = Omit<IChartPosition, "id">;
 export interface IChartDetails {
   name: string;
   srcUrl: string;
+  select?: string;
+  where?: string,
+  group?: string,
+  limit?: string,
   dataKey: string;
   labelKey: string;
   chartType: string;
   method: string;
-  apiKey: string;
   fromDate: number;
   toDate: number;
 }

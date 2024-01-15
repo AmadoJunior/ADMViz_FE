@@ -186,7 +186,10 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
           labelKey: string;
           chartType: string;
           method: string;
-          apiKey: string;
+          select?: string;
+          where?: string,
+          group?: string,
+          limit?: string,
           fromDate: number,
           toDate: number,
           position: IChartPosition,
@@ -200,7 +203,10 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
               labelKey: chart?.labelKey,
               chartType: chart?.chartType,
               method: chart?.method,
-              apiKey: chart?.apiKey,
+              select: chart?.select,
+              where: chart?.select,
+              group: chart?.select,
+              limit: chart?.select,
               fromDate: chart?.fromDate,
               toDate: chart?.toDate
             },

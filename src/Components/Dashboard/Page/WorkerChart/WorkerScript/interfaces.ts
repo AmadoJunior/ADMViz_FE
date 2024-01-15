@@ -11,7 +11,10 @@ export interface FetchDataDTO {
     to: number,
   },
   type: string,
-  apiKey: string
+  select?: string,
+  where?: string,
+  group?: string,
+  limit?: string,
 }
 
 export interface WorkerResponse {

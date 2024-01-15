@@ -80,7 +80,10 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
           to: chartDetails.toDate
         },
         type: chartDetails.chartType,
-        apiKey: chartDetails.apiKey,
+        select: chartDetails.select, 
+        where: chartDetails.where, 
+        group: chartDetails.group, 
+        limit: chartDetails.limit,
       })
       .then((data) => {
         const { status, chartData } = data;

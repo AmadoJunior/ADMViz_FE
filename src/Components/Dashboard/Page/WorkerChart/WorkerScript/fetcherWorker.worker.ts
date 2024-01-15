@@ -3,6 +3,22 @@ declare const self: DedicatedWorkerGlobalScope;
 
 //Int
 import {FetchDataDTO, WorkerResponse} from "./interfaces";
+import { DateTime } from "luxon";
+
+function generateQuery(
+    filter: {
+      from: number,
+      to: number,
+    },
+    select?: string,
+    where?: string,
+    group?: string,
+    limit?: string
+  ) {
+    const startDate = DateTime.fromMillis(filter.from).toFormat("y-LL-dd");
+    const endDate = DateTime.fromMillis(filter.to).toFormat("y-LL-dd");
+    return `?${select && `$select=${select}&`}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where && `and ${where}`}${group && `&$group=${group}`}${limit && `&$limit=${limit}`}`;
+  }
 
 async function fetchDataset(
   srcUrl: string,
@@ -12,23 +28,23 @@ async function fetchDataset(
     from: number,
     to: number,
   },
-  auth: string,
-  method: string
+  method: string,
+  select?: string,
+  where?: string,
+  group?: string,
+  limit?: string,
 ) {
   const labels = [];
   const data = [];
   let status;
   try {
     const res = await fetch(
-      `${srcUrl}?${new URLSearchParams({ from: String(filter.from), to: String(filter.to) })}`,
+      `${srcUrl}${generateQuery(filter, select, where, group, limit)}`,
       {
         method: method,
-        headers: {
-          authorization: `${auth}`,
-        },
       }
     );
-    console.log(res);
+    
     status = res.status;
     if (status !== 200) {
       throw new Error(String(status));
@@ -57,7 +73,7 @@ async function fetchDataset(
   };
 }
 
-export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, type, apiKey }: FetchDataDTO): Promise<WorkerResponse> => {
+export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, type, select, where, group, limit }: FetchDataDTO): Promise<WorkerResponse> => {
   const datasetsArr = [];
   const labelsSet = new Set<string>();
   let resStatus;
@@ -68,8 +84,11 @@ export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, typ
       dataKey,
       labelKey,
       filter,
-      apiKey,
-      method
+      method,
+      select, 
+      where, 
+      group, 
+      limit,
     );
     
     //Status
