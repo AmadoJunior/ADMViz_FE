@@ -46,15 +46,15 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({demo}): JSX.Element => {
 
   //Effect
   React.useEffect(() => {
-    if(userDetailsContext?.isAuthenticated && userDetailsContext?.userDetails){
-      const { id } = userDetailsContext?.userDetails;
-      fetchDashboards(id);
-    } else if(demo){
+    if(demo){
       setDashboards([{
         id: 0,
         name: "Demo"
       }]);
       setLoading(false);
+    } else if(userDetailsContext?.isAuthenticated && userDetailsContext?.userDetails){
+      const { id } = userDetailsContext?.userDetails;
+      fetchDashboards(id);
     }
   }, [userDetailsContext?.isAuthenticated])
 
