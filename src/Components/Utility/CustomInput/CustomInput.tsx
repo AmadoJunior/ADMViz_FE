@@ -61,7 +61,7 @@ const CustonInput: React.FC<ICustonInputProps> = ({
           id={`custom-input-${title}`}
           placeholder="Type in here…" 
           multiline
-          value={value}
+          value={value || ""}
           onChange={handleChange}
           
           sx={{
