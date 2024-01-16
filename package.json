@@ -12,8 +12,11 @@
     "@mui/x-date-pickers": "^6.11.2",
     "@react-hook/passive-layout-effect": "^1.2.1",
     "@react-hook/resize-observer": "^1.2.6",
+    "@types/colormap": "^2.3.2",
+    "@types/luxon": "^3.3.1",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
+    "@types/uuid": "^9.0.2",
     "@vitejs/plugin-react": "^4.2.0",
     "chart.js": "^4.3.3",
     "chartjs-plugin-autocolors": "^0.2.2",
@@ -32,17 +35,14 @@
     "react-use-draggable-scroll": "^0.4.7",
     "socket.io-client": "^4.7.2",
     "styled-components": "^5.3.11",
+    "typescript": "^5.3.3",
     "use-query-params": "^2.2.1",
     "uuid": "^9.0.0",
     "vite": "^5.0.2",
-    "vite-tsconfig-paths": "^4.2.1",
-    "web-vitals": "^2.1.4",
-    "typescript": "^5.3.3",
     "vite-plugin-comlink": "^3.0.5",
     "vite-plugin-pwa": "^0.17.2",
-    "@types/colormap": "^2.3.2",
-    "@types/luxon": "^3.3.1",
-    "@types/uuid": "^9.0.2"
+    "vite-tsconfig-paths": "^4.2.1",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "vite",
@@ -68,8 +68,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "devDependencies": {
-    
   }
 }

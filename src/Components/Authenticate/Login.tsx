@@ -25,6 +25,9 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
   //User Details
   const userDetailsContext = React.useContext(UserDetailsContext);
 
+  //Error
+  const [errored, setErrored] = React.useState(false);
+
   //Methods
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -38,12 +41,14 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
       .then(response => {
         console.log(response);
         if(response.status === 200){
+          setErrored(false);
           toast.success("Successfull Login");
           return userDetailsContext.handleIsAuthenticated();
         }
         throw new Error(`Failed Login: ${response.status}`);
       })
       .catch(e => {
+        setErrored(true);
         toast.error("Failed Login");
         console.error(e);
       })
@@ -70,6 +75,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         <TextField
+          error={errored}
           margin="normal"
           required
           fullWidth
@@ -77,6 +83,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           name="username"
         />
         <TextField
+          error={errored}
           margin="normal"
           required
           fullWidth

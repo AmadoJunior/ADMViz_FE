@@ -88,12 +88,15 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
   //Logout Handler
   const handleLogout = () => {
     setLogoutLoading(true);
-    fetch(`/api/perform_logout`)
+    fetch(`/api/perform_logout`, {
+      redirect: 'manual',
+    })
     .then(response => {
-      if(response.status === 200){
+      if(response.status === 200 || response.status === 0){ //opaqueredirect
         toast.success("Successfull Logout");
         userDetailsContext.clearAuthentication();
       } else {
+        console.log(response);
         throw new Error(`Failed Logout: ${response.status}`);
       }
     })
