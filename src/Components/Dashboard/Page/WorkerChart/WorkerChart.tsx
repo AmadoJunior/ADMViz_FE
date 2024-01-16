@@ -26,7 +26,7 @@ import { IChartData } from "./AbstractChart/AbstractChart";
 type WorkerModule = typeof import('./WorkerScript/fetcherWorker.worker');
 
 interface IWorkerChartProps {
-  name: string;
+  name?: string;
   children?: React.ReactNode;
   chartId: number;
   chartDetails: IChartDetails;
@@ -84,6 +84,7 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
         where: chartDetails.where, 
         group: chartDetails.group, 
         limit: chartDetails.limit,
+        order: chartDetails.order
       })
       .then((data) => {
         const { status, chartData } = data;

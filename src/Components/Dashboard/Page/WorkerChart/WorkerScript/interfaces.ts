@@ -14,6 +14,7 @@ export interface FetchDataDTO {
   select?: string,
   where?: string,
   group?: string,
+  order?: string,
   limit?: string,
 }
 

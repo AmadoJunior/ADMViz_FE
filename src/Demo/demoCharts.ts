@@ -10,6 +10,7 @@ export const demoCharts = [
       "select": "date_extract_m(crash_date) as m, COUNT(*) as total",
       "where": "death_cnt > 0",
       "group": "m",
+      "order": "m",
       "limit": "",
       "labelKey": "m",
       "chartType": "line",

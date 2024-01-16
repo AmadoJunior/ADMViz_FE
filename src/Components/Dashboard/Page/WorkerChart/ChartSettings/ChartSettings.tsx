@@ -35,6 +35,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
   const [where, setWhere] = React.useState<string | undefined>();
   const [group, setGroup] = React.useState<string | undefined>();
   const [limit, setLimit] = React.useState<string | undefined>();
+  const [order, setOrder] = React.useState<string | undefined>();
   const [labelKey, setLabelKey] = React.useState<string | undefined>("");
   const [method, setMethod] = React.useState<string>("GET");
   const [chartType, setChartType] = React.useState<string>(ChartType.LINE);
@@ -57,6 +58,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         setWhere(curChart?.details?.where);
         setGroup(curChart?.details?.group);
         setLimit(curChart?.details?.limit);
+        setOrder(curChart?.details?.order);
         setLabelKey(curChart?.details?.labelKey);
         setMethod(curChart?.details?.method);
         setChartType(curChart?.details?.chartType);
@@ -89,10 +91,11 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       where,
       group,
       limit,
+      order,
       fromDate,
       toDate
     })
-  }, [where, group, limit, select]);
+  }, [where, group, limit, order, select]);
 
   return (
     <Box sx={{
@@ -166,6 +169,12 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
               title="Group"
               value={group}
               setValue={setGroup}
+              optional={true}
+          ></CustomInput>
+           <CustomInput 
+              title="Order"
+              value={order}
+              setValue={setOrder}
               optional={true}
           ></CustomInput>
           <CustomInput 

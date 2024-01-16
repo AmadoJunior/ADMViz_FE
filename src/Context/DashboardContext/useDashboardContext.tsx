@@ -189,6 +189,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
           select?: string;
           where?: string,
           group?: string,
+          order?: string,
           limit?: string,
           fromDate: number,
           toDate: number,
@@ -206,6 +207,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
               select: chart?.select,
               where: chart?.where,
               group: chart?.group,
+              order: chart?.order,
               limit: chart?.limit,
               fromDate: chart?.fromDate,
               toDate: chart?.toDate

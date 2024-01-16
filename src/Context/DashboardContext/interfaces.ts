@@ -23,6 +23,7 @@ export interface IChartDetails {
   select?: string;
   where?: string,
   group?: string,
+  order?: string,
   limit?: string,
   dataKey?: string;
   labelKey?: string;

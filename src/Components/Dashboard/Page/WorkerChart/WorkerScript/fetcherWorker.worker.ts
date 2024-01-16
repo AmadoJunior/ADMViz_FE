@@ -13,11 +13,12 @@ function generateQuery(
     select?: string,
     where?: string,
     group?: string,
+    order?: string,
     limit?: string
   ) {
     const startDate = DateTime.fromMillis(filter.from).toFormat("y-LL-dd");
     const endDate = DateTime.fromMillis(filter.to).toFormat("y-LL-dd");
-    return `?${select ? `$select=${select}&` : ""}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${limit ? `&$limit=${limit}` : ""}`;
+    return `?${select ? `$select=${select}&` : ""}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
   }
 
 async function fetchDataset(
@@ -32,6 +33,7 @@ async function fetchDataset(
   select?: string,
   where?: string,
   group?: string,
+  order?: string,
   limit?: string,
 ) {
   const labels = [];
@@ -39,7 +41,7 @@ async function fetchDataset(
   let status;
   try {
     const res = await fetch(
-      `${srcUrl}${generateQuery(filter, select, where, group, limit)}`,
+      `${srcUrl}${generateQuery(filter, select, where, group, order, limit)}`,
       {
         method: method,
       }
@@ -73,7 +75,7 @@ async function fetchDataset(
   };
 }
 
-export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, type, select, where, group, limit }: FetchDataDTO): Promise<WorkerResponse> => {
+export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, type, select, where, group, order, limit }: FetchDataDTO): Promise<WorkerResponse> => {
   const datasetsArr = [];
   const labelsSet = new Set<string>();
   let resStatus;
@@ -88,6 +90,7 @@ export const fetchData = async ({ srcUrl, dataKey, labelKey, method, filter, typ
       select, 
       where, 
       group, 
+      order,
       limit,
     );
     
