@@ -13,7 +13,8 @@ import {
   Tooltip,
   Legend,
   ChartType,
-  ArcElement
+  ArcElement,
+  ChartData
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 
@@ -61,23 +62,10 @@ export const options = {
 };
 
 //Props
-interface IChartDatasets {
-  label?: string,
-  labels?: string[],
-  data: number[],
-  borderColor?: string | string[],
-  backgroundColor?: string | string[],
-}
-
-export interface IChartData {
-  labels: string[],
-  datasets: IChartDatasets[]
-}
-
 interface IAbstractChartProps {
   children?: React.ReactNode,
   type: ChartType,
-  data: IChartData
+  data: ChartData
 }
 
 ChartJS.register(

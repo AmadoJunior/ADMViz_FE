@@ -1,16 +1,12 @@
-import { ChartDataset } from "chart.js";
-import { IChartData } from "../AbstractChart/AbstractChart";
+import { ChartData } from "chart.js";
 
 export interface FetchDataDTO {
   srcUrl: string,
   dataKey: string,
   method: string,
   labelKey: string,
-  filter: {
-    from: number,
-    to: number,
-  },
-  type: string,
+  from: number,
+  to: number,
   select?: string,
   where?: string,
   group?: string,
@@ -18,7 +14,14 @@ export interface FetchDataDTO {
   limit?: string,
 }
 
+export interface FetchDatasetResponse {
+  labels: string[],
+  data: string[],
+  error?: Error,
+  label: string,
+}
+
 export interface WorkerResponse {
-  status: number,
-  chartData: IChartData,
+  chartData: ChartData,
+  error?: Error
 }

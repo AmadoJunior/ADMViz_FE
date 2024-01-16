@@ -1,11 +1,10 @@
 //Deps
-import React, { useMemo, useEffect, useState, useContext, useRef } from "react";
+import React, { useMemo, useEffect, useState } from "react";
 import * as Comlink from "comlink";
 import toast from "react-hot-toast";
 
 //MUI
 import { Box, Skeleton, Typography } from "@mui/material";
-import { LoadingButton } from '@mui/lab';
 import SettingsIcon from "@mui/icons-material/Settings";
 
 //Components
@@ -14,13 +13,12 @@ import ChartSettings from "./ChartSettings/ChartSettings";
 import CustomIconButton from "../../../Utility/IconButton/IconButton";
 
 //Context
-import { DashboardContext } from "../../../../Context/DashboardContext/useDashboardContext";
 
 //Interfaces
 import {
   ChartType, IChartDetails,
 } from "../../../../Context/DashboardContext/interfaces";
-import { IChartData } from "./AbstractChart/AbstractChart";
+import { ChartData } from "chart.js";
 
 //Props
 type WorkerModule = typeof import('./WorkerScript/fetcherWorker.worker');
@@ -40,8 +38,8 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
   disabled
 }): JSX.Element => {
   //Worker Status
-  const [workerStatus, setWorkerStatus] = useState(200);
   const [workerError, setWorkerError] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   //Chart Worker
@@ -52,7 +50,7 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
 
   //Data
   const [settingsActive, setSettingsActive] = useState<boolean>(false);
-  const [chartData, setChartData] = useState<IChartData>({
+  const [chartData, setChartData] = useState<ChartData>({
     labels: [],
     datasets: [],
   });
@@ -75,11 +73,8 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
         dataKey: chartDetails.dataKey,
         labelKey: chartDetails.labelKey,
         method: chartDetails.method,
-        filter: {
-          from: chartDetails.fromDate,
-          to: chartDetails.toDate
-        },
-        type: chartDetails.chartType,
+        from: chartDetails.fromDate,
+        to: chartDetails.toDate,
         select: chartDetails.select, 
         where: chartDetails.where, 
         group: chartDetails.group, 
@@ -87,24 +82,30 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
         order: chartDetails.order
       })
       .then((data) => {
-        const { status, chartData } = data;
-        setWorkerStatus(status);
-        if (status === 200) {
+        const { error, chartData } = data;
+        if (!error) {
           setWorkerError(false);
+          setErrorMsg("");
           setChartData(chartData);
           return;
         }
-        throw new Error(`Worker Failed with Status: ${status}`);
+        throw error;
       })
       .catch((e) => {
+        //Error
         setWorkerError(true);
+        setErrorMsg(e.message);
+
+        //Clear Data
         setChartData({
           labels: [],
           datasets: [],
         });
 
+        //Notify
         toast.error("Worker Failed Fetching Data");
         
+        //Debug
         console.error(e);
       })
       .finally(() => {
@@ -183,16 +184,17 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
                   alignItems: "center",
                   justifyContent: "center",
                   backgroundColor: "background.paper",
-                  padding: "10px",
+                  padding: "10px 20px 10px 20px",
                   borderRadius: "10px",
                   border: "1px solid",
                   borderColor: "#302f2f",
+                  textAlign: "center"
                 }}
               >
                 <Typography width="150px" color="error" gutterBottom>
                   Worker Error:{" "}
                 </Typography>
-                <Typography>{workerStatus}</Typography>
+                <Typography variant="caption">{errorMsg}</Typography>
               </Box>
             ) : isLoading ? (
               <Skeleton variant="rounded" sx={{
