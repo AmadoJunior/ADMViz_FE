@@ -145,7 +145,7 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
                 },
                 () => ({
                   "&:hover": {
-                    backgroundColor: "secondary.main",
+                    backgroundColor: "primary.dark",
                   },
                 }),
               ]}
