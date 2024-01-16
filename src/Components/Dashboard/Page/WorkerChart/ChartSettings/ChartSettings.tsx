@@ -78,7 +78,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
     setChartType(e.target.value);
   };
 
-  const onSubmit = React.useCallback(() => {
+  const onSubmit = () => {
     setIsActive(false);
     dashboardContext.updateChartDetails(chartId, {
       name,
@@ -95,7 +95,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       fromDate,
       toDate
     })
-  }, [where, group, limit, order, select]);
+  };
 
   return (
     <Box sx={{

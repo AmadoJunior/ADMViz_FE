@@ -13,6 +13,7 @@ export const DashboardContext = createContext<IDashboardContext>({
   name: "",
   charts: [],
   isLocked: false,
+  isUpdatingDetails: false,
 
   //Setters
   setDashboardId: () => {},
@@ -48,9 +49,11 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
   const [dashboardId, setDashboardId] = useState<number>(props.dashboardId);
   const [name, setName] = useState<string>(props.dashboardName);
   const [charts, setCharts] = useState<IChart[]>([]);
+  const [isUpdatingDetails, setIsUpdatingDetails] = useState(false);
 
   //Methods
   const updateChartDetails = (chartId: number, chartDetails: IChartDetails): Promise<void> => {
+    setIsUpdatingDetails(true);
     return fetch(`/api/dashboards/${dashboardId}/charts/${chartId}`, {
       method: "PUT",
       headers: {
@@ -77,6 +80,9 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
       toast.error(`Failed Updating Chart Details`);
       console.error(e);
       throw e;
+    })
+    .finally(() => {
+      setIsUpdatingDetails(false);
     })
   }
 
@@ -240,6 +246,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
     name,
     charts,
     isLocked,
+    isUpdatingDetails,
 
     //Setters
     setDashboardId,

@@ -46,6 +46,7 @@ export interface IDashboardContext {
   name: string,
   charts: IChart[],
   isLocked: boolean,
+  isUpdatingDetails: boolean,
 
   //Setters
   setDashboardId: React.Dispatch<React.SetStateAction<number>>,

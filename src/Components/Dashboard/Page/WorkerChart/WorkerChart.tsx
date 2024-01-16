@@ -1,5 +1,5 @@
 //Deps
-import React, { useMemo, useEffect, useState } from "react";
+import React, { useMemo, useEffect, useState, useContext } from "react";
 import * as Comlink from "comlink";
 import toast from "react-hot-toast";
 
@@ -19,6 +19,7 @@ import {
   ChartType, IChartDetails,
 } from "../../../../Context/DashboardContext/interfaces";
 import { ChartData } from "chart.js";
+import useDashboardContext, { DashboardContext } from "../../../../Context/DashboardContext/useDashboardContext";
 
 //Props
 type WorkerModule = typeof import('./WorkerScript/fetcherWorker.worker');
@@ -37,6 +38,9 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
   chartDetails,
   disabled
 }): JSX.Element => {
+  //Context
+  const {isUpdatingDetails} = useContext(DashboardContext);
+
   //Worker Status
   const [workerError, setWorkerError] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
@@ -56,6 +60,10 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
   });
 
   //Effects
+  useEffect(() => {
+    setIsLoading(isUpdatingDetails);
+  }, [isUpdatingDetails]);
+
   useEffect(() => {
     if (
         chartDetails &&
@@ -174,7 +182,11 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
           }}
         >
           {!settingsActive && (
-            workerError ? (
+            isLoading ? (
+              <Skeleton variant="rounded" sx={{
+                height: "100%"
+              }}/>
+            ) : workerError ? (
               <Box
                 sx={{
                   display: "flex",
@@ -196,10 +208,6 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
                 </Typography>
                 <Typography variant="caption">{errorMsg}</Typography>
               </Box>
-            ) : isLoading ? (
-              <Skeleton variant="rounded" sx={{
-                height: "100%"
-              }}/>
             ) : (
             <AbstractChart
               type={chartDetails.chartType as ChartType}
