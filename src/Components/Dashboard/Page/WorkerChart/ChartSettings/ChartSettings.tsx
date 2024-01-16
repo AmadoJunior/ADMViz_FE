@@ -154,31 +154,31 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
           <Typography variant="h6">Query Builder</Typography>
           
           <CustomInput 
-              title="Select"
+              title="$SELECT: "
               value={select}
               setValue={setSelect}
               optional={true}
           ></CustomInput>
           <CustomInput 
-              title="Where"
+              title="$WHERE:"
               value={where}
               setValue={setWhere}
               optional={true}
           ></CustomInput>
           <CustomInput 
-              title="Group"
+              title="$GROUP:"
               value={group}
               setValue={setGroup}
               optional={true}
           ></CustomInput>
            <CustomInput 
-              title="Order"
+              title="$ORDER:"
               value={order}
               setValue={setOrder}
               optional={true}
           ></CustomInput>
           <CustomInput 
-              title="Limit"
+              title="$LIMIT:"
               value={limit}
               setValue={setLimit}
               optional={true}
