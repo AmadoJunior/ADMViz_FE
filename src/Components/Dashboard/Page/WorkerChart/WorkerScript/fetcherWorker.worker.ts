@@ -17,7 +17,7 @@ function generateQuery(
   ) {
     const startDate = DateTime.fromMillis(filter.from).toFormat("y-LL-dd");
     const endDate = DateTime.fromMillis(filter.to).toFormat("y-LL-dd");
-    return `?${select && `$select=${select}&`}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where && `and ${where}`}${group && `&$group=${group}`}${limit && `&$limit=${limit}`}`;
+    return `?${select ? `$select=${select}&` : ""}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${limit ? `&$limit=${limit}` : ""}`;
   }
 
 async function fetchDataset(

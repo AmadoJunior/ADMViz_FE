@@ -204,9 +204,9 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
               chartType: chart?.chartType,
               method: chart?.method,
               select: chart?.select,
-              where: chart?.select,
-              group: chart?.select,
-              limit: chart?.select,
+              where: chart?.where,
+              group: chart?.group,
+              limit: chart?.limit,
               fromDate: chart?.fromDate,
               toDate: chart?.toDate
             },

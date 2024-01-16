@@ -4,7 +4,7 @@ import { ChartType } from "../../../../../Context/DashboardContext/interfaces";
 import { DateTime } from "luxon";
 
 //MUI
-import {Box, Button} from "@mui/material";
+import {Box, Button, Typography, Checkbox} from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 
 //Components
@@ -28,14 +28,14 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
   const dashboardContext = useContext(DashboardContext);
 
   //State
-  const [name, setName] = React.useState<string>("");
-  const [srcUrl, setSrcUrl] = React.useState<string>("");
-  const [dataKey, setDataKey] = React.useState<string>("");
+  const [name, setName] = React.useState<string | undefined>("");
+  const [srcUrl, setSrcUrl] = React.useState<string | undefined>("");
+  const [dataKey, setDataKey] = React.useState<string | undefined>("");
   const [select, setSelect] = React.useState<string | undefined>();
   const [where, setWhere] = React.useState<string | undefined>();
   const [group, setGroup] = React.useState<string | undefined>();
   const [limit, setLimit] = React.useState<string | undefined>();
-  const [labelKey, setLabelKey] = React.useState<string>("");
+  const [labelKey, setLabelKey] = React.useState<string | undefined>("");
   const [method, setMethod] = React.useState<string>("GET");
   const [chartType, setChartType] = React.useState<string>(ChartType.LINE);
   const [fromDate, setFromDate] = React.useState<number>(
@@ -66,44 +66,6 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
     }
   }, [chartId])
 
-  //Form Handlers
-  const handleName = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setName(e?.currentTarget?.value);
-  }
-
-  const handleSrcUrl = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setSrcUrl(e?.currentTarget?.value);
-  }
-  
-  const handleDataKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setDataKey(e?.currentTarget?.value);
-  }
-
-  const handleLabelKey = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setLabelKey(e?.currentTarget?.value);
-  };
-
-  const handleSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setSelect(e?.currentTarget?.value);
-  };
-  const handleWhere = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setWhere(e?.currentTarget?.value);
-  };
-  const handleGroup = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setGroup(e?.currentTarget?.value);
-  };
-  const handleLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
-    e.preventDefault();
-    setLimit(e?.currentTarget?.value);
-  };
-
   const handleMethod = (e: SelectChangeEvent<string>) => {
     e.preventDefault();
     setMethod(e.target.value);
@@ -114,7 +76,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
     setChartType(e.target.value);
   };
 
-  const onSubmit = () => {
+  const onSubmit = React.useCallback(() => {
     setIsActive(false);
     dashboardContext.updateChartDetails(chartId, {
       name,
@@ -130,7 +92,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       fromDate,
       toDate
     })
-  };
+  }, [where, group, limit, select]);
 
   return (
     <Box sx={{
@@ -163,43 +125,58 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         <CustomInput 
             title="Chart Name"
             value={name}
-            handler={handleName}
+            setValue={setName}
         ></CustomInput>
         <CustomInput 
             title="Src Url"
             value={srcUrl}
-            handler={handleSrcUrl}
+            setValue={setSrcUrl}
         ></CustomInput>
         <CustomInput 
             title="Data Key"
             value={dataKey}
-            handler={handleDataKey}
-        ></CustomInput>
-        <CustomInput 
-            title="Select"
-            value={select}
-            handler={handleSelect}
-        ></CustomInput>
-        <CustomInput 
-            title="Where"
-            value={where}
-            handler={handleWhere}
-        ></CustomInput>
-        <CustomInput 
-            title="Group"
-            value={group}
-            handler={handleGroup}
-        ></CustomInput>
-        <CustomInput 
-            title="Limit"
-            value={limit}
-            handler={handleLimit}
+            setValue={setDataKey}
         ></CustomInput>
         <CustomInput 
             title="Label Key"
             value={labelKey}
-            handler={handleLabelKey}
+            setValue={setLabelKey}
         ></CustomInput>
+        <Box sx={{
+          backgroundColor: 'background.default',
+          padding: "10px 20px 10px 20px",
+          marginY: "10px",
+          borderRadius: "20px"
+        }}>
+          <Typography variant="h6">Query Builder</Typography>
+          
+          <CustomInput 
+              title="Select"
+              value={select}
+              setValue={setSelect}
+              optional={true}
+          ></CustomInput>
+          <CustomInput 
+              title="Where"
+              value={where}
+              setValue={setWhere}
+              optional={true}
+          ></CustomInput>
+          <CustomInput 
+              title="Group"
+              value={group}
+              setValue={setGroup}
+              optional={true}
+          ></CustomInput>
+          <CustomInput 
+              title="Limit"
+              value={limit}
+              setValue={setLimit}
+              optional={true}
+          ></CustomInput>
+        </Box>
+        
+        
         <Box sx={{
           display: "flex",
           flexDirection: "row",
