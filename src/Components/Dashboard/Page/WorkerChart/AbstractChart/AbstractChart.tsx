@@ -3,18 +3,9 @@ import React, {useEffect, useRef} from "react";
 import { Colors } from 'chart.js';
 import {
   Chart as ChartJS,
-  RadialLinearScale,
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
   ChartType,
-  ArcElement,
-  ChartData
+  ChartData,
+  registerables
 } from 'chart.js';
 import { Chart } from 'react-chartjs-2';
 
@@ -69,16 +60,7 @@ interface IAbstractChartProps {
 }
 
 ChartJS.register(
-  BarElement,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  Title,
-  Tooltip,
-  Legend,
-  ArcElement,
-  RadialLinearScale,
+  ...registerables,
   Colors
 );
 
