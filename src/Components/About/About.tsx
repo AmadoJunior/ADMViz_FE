@@ -65,7 +65,7 @@ const About: React.FC<IAboutProps> = (props): JSX.Element => {
       <Typography gutterBottom>Each chart module employs a web-worker which uses the chart settings to fetch, extract and restructure the visualization data. It expects to receive a JSON array containing key value pairs. It uses the 'Data Key' and 'Label Key' to extract values from each object in the array. It then constructs datasets and labels arrays containing the values pointed to by each key respectively. </Typography>
       
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Chart Module Settings: </Typography>
-      <img src={ChartSettings} style={{margin: "10px"}}/>
+      <img src={ChartSettings}/>
       
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Basic Settings: </Typography>
       <ul>
