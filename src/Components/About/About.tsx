@@ -84,8 +84,7 @@ const About: React.FC<IAboutProps> = (props): JSX.Element => {
         <li><strong>$ORDER:</strong> Column to order results on, similar to ORDER BY in SQL 	.</li>
         <li><strong>$LIMIT:</strong> Maximum number of results to return.</li>
       </ul>
-      <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Learn more about SODA APIs: </Typography>
-      <Typography>Learn more about SODA APIs: <a href={"https://dev.socrata.com/docs/endpoints.html"} target="_blank">Docs</a></Typography>
+      <Typography sx={{ fontWeight: 'bold' }} gutterBottom>Learn more about SODA APIs: <a href={"https://dev.socrata.com/docs/endpoints.html"} target="_blank">Docs</a></Typography>
     </Box>
   );
 }
