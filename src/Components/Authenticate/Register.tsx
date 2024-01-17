@@ -206,7 +206,7 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
     validateInputs(formData)
     .then((jsonData: IRegisterFormData) => {
       setAuthProcessing(true);
-      return fetch(`${import.meta.env.NODE_ENV === "production" ? "https://" : "http://"}${import.meta.env.VITE_API_ENDPOINT}/api/perform_register`, {
+      return fetch(`/api/perform_register`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
