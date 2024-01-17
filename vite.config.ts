@@ -14,12 +14,12 @@ export default defineConfig(({mode}) => {
             '/api': {
                 target: `http://${env.VITE_API_ENDPOINT}`,
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, '/api/'),
+                rewrite: (path) => path.replace(/^\/api/, '/api'),
             },
             '/sdr': {
                 target: `http://${env.VITE_API_ENDPOINT}`,
                 changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/sdr/, '/sdr/'),
+                rewrite: (path) => path.replace(/^\/sdr/, '/sdr'),
             },
         }
     } : {};
