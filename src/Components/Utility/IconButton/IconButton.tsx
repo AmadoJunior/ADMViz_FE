@@ -23,7 +23,7 @@ const CustomIconButton: React.FC<IIconButtonProps> = ({title, loading, disabled,
         display: "flex"
       }}
     >
-      <Tooltip placement="bottom" arrow disableHoverListener={disabled} title={title}>
+      <Tooltip placement="right" arrow disableHoverListener={disabled} title={title}>
         <Box
           onClick={disabled ? () => {} : handler}
           sx={[

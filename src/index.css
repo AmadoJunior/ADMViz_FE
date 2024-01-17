@@ -17,6 +17,18 @@ canvas {
   height: 100% !important;
 }
 
-a {
+a:visited {
   text-decoration: none;
+  color: #0288d1;
+  cursor: pointer;
+}
+
+a:link {
+  text-decoration: none;
+  color: #1976d2;
+  cursor: pointer;
+}
+
+ul {
+  margin: 0px 0px 10px 0px;
 }

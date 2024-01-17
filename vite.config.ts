@@ -19,7 +19,8 @@ export default defineConfig(({mode}) => {
         //Cache Static Assets
         includeAssets: [
             "**/*",
-            "**/*.png"
+            "**/*.png",
+            "**/*.gif"
         ],
         manifest: {
             name: 'ADMViz',
@@ -47,7 +48,7 @@ export default defineConfig(({mode}) => {
     worker: {
         plugins: () => [comlink()],
     },
-    assetsInclude: ["**/*.png"],
+    assetsInclude: ["**/*.png", "**/*.gif"],
     server: {    
         open: true,
         proxy: {
