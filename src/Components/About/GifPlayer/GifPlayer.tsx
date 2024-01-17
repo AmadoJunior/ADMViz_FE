@@ -54,6 +54,7 @@ const GifPlayer: React.FC<IGifPlayerProps> = ({preview, gif}): JSX.Element => {
       height: imageSize.height + padding, // Set the height of the Box
       borderWidth: "1px",
       borderStyle: "solid",
+      marginBottom: "10px",
       borderColor: active ? theme.palette.primary.main : theme.palette.background.default,
     }}>
       {

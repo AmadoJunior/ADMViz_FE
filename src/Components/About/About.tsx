@@ -50,15 +50,16 @@ const About: React.FC<IAboutProps> = (props): JSX.Element => {
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Deleting Dashboards: </Typography>
       <GifPlayer gif={DeletingDashboards} preview={DeletingDashboardPreview} />
 
-      <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Locking Chart Modules: </Typography>
-      <GifPlayer gif={LockingChartModules} preview={LockingChartModulePreview} />
-
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Creating Chart Modules: </Typography>
       <GifPlayer gif={CreatingChartModules} preview={CreatingChartModulePreview} />
 
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Dashboard Customization: </Typography>
       <Typography gutterBottom>Each chart module within a dashboard can be freely resized and positioned anywhere within the work area.</Typography>
       <GifPlayer gif={Resize_DnD} preview={Resize_DnDPreview} />
+
+      <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Locking Chart Modules: </Typography>
+      <Typography gutterBottom>Locking chart modules will prevent any changes to the dashboard work area.</Typography>
+      <GifPlayer gif={LockingChartModules} preview={LockingChartModulePreview} />
 
       <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> About Chart Modules: </Typography>
       <Typography gutterBottom>Each chart module employs a web-worker which uses the chart settings to fetch, extract and restructure the visualization data. It expects to receive a JSON array containing key value pairs. It uses the 'Data Key' and 'Label Key' to extract values from each object in the array. It then constructs datasets and labels arrays containing the values pointed to by each key respectively. </Typography>
@@ -83,7 +84,8 @@ const About: React.FC<IAboutProps> = (props): JSX.Element => {
         <li><strong>$ORDER:</strong> Column to order results on, similar to ORDER BY in SQL 	.</li>
         <li><strong>$LIMIT:</strong> Maximum number of results to return.</li>
       </ul>
-      <Typography>Learn more about SODA APIs. <a href={"https://dev.socrata.com/docs/queries/"}>Docs</a></Typography>
+      <Typography variant="subtitle1" gutterBottom  sx={{ fontWeight: 'bold' }}> Learn more about SODA APIs: </Typography>
+      <Typography>Learn more about SODA APIs: <a href={"https://dev.socrata.com/docs/endpoints.html"} target="_blank">Docs</a></Typography>
     </Box>
   );
 }
