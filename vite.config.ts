@@ -6,6 +6,23 @@ import viteTsconfigPaths from 'vite-tsconfig-paths'
 
 export default defineConfig(({mode}) => {
     const env = loadEnv(mode, process.cwd(), '');
+    const isDevelopment = mode === 'development';
+
+    const serverConfig = isDevelopment ? {
+        open: true,
+        proxy: {
+            '/api': {
+                target: `http://${env.VITE_API_ENDPOINT}`,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/api/, '/api/'),
+            },
+            '/sdr': {
+                target: `http://${env.VITE_API_ENDPOINT}`,
+                changeOrigin: true,
+                rewrite: (path) => path.replace(/^\/sdr/, '/sdr/'),
+            },
+        }
+    } : {};
 
     return {
     // depending on your application, base can also be "/"
@@ -49,21 +66,7 @@ export default defineConfig(({mode}) => {
         plugins: () => [comlink()],
     },
     assetsInclude: ["**/*.png", "**/*.gif"],
-    server: {    
-        open: true,
-        proxy: {
-            '/api': {
-                target: `http://${env.VITE_API_ENDPOINT}`,
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/api/, '/api/'),
-            },
-            '/sdr': {
-                target: `http://${env.VITE_API_ENDPOINT}`,
-                changeOrigin: true,
-                rewrite: (path) => path.replace(/^\/sdr/, '/sdr/'),
-            },
-        }
-    },
+    server: serverConfig,
     build: {
         assetsDir: "static",
     }
