@@ -2,6 +2,7 @@
 import React from "react";
 import useSearchParam from "./../useQueryState";
 import toast from "react-hot-toast";
+import ReCAPTCHA from "react-google-recaptcha";
 
 //MUI
 import {Box, Avatar, Typography, TextField} from "@mui/material";
@@ -93,9 +94,17 @@ const defaultFormInputs: IFormInput[] = [
 ];
 
 const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing}): JSX.Element => {
+  // Form Nav State
   const [currentForm, setCurrentForm] = useSearchParam("authForm", "0");
+
+  //Rechaptcha State
+  const [token, setToken] = React.useState<string | null>(null);
+  const recaptchaRef = React.useRef<ReCAPTCHA>();
+  
+  //Form Input State
   const [formInputs, setFormInputs] = React.useState<IFormInput[]>([...defaultFormInputs]);
 
+  //Form Handlers
   const validateInputs = (formData: FormData): Promise<IRegisterFormData> => {
     return new Promise((resolve, reject) => {
 
@@ -202,6 +211,9 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
   
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+
+    if(!token?.length) return;
+    
     const formData = new FormData(event.currentTarget);
     validateInputs(formData)
     .then((jsonData: IRegisterFormData) => {
@@ -211,7 +223,7 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(jsonData),
+        body: JSON.stringify({...jsonData, token}),
       })
       .then(response => {
         console.log(response);
@@ -237,8 +249,24 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
     })
     .finally(() => {
       setAuthProcessing(false);
+      recaptchaRef?.current?.reset();
     })
   };
+
+  //Captcha Handlers
+  const onCaptchaSubmit = () => {
+    const captchaValue = recaptchaRef?.current?.getValue();
+
+    if(captchaValue?.length) {
+      setToken(captchaValue);
+    } else {
+      setToken(null);
+    }
+  }
+
+  const clearToken = () => {
+    setToken(null);
+  }
 
   return (
     <Box
@@ -251,7 +279,7 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
       <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
         <LockOutlinedIcon/>
       </Avatar>
-      <Typography component="h1" variant="h5">
+      <Typography component="h1" variant="h5" gutterBottom>
         Register
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
@@ -259,7 +287,6 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
           return (
             <TextField
               key={`FormInput:Login:${index}`}
-              margin="normal"
               required
               fullWidth
               id={formInput.name}
@@ -267,15 +294,27 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
               name={formInput.name}
               error={formInput.error}
               helperText={formInput.errorMsg}
+              sx={{
+                marginBottom: "16px"
+              }}
             />
           )
         })}
+        <ReCAPTCHA 
+          theme="dark" 
+          ref={recaptchaRef as React.RefObject<ReCAPTCHA>} 
+          sitekey={import.meta.env.VITE_SITE_KEY} 
+          onChange={onCaptchaSubmit}
+          onError={clearToken}
+          onExpired={clearToken}
+        />
         <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           loading={authProcessing}
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 2, mb: 2 }}
+          disabled={!token}
         >
           Register
         </LoadingButton>
