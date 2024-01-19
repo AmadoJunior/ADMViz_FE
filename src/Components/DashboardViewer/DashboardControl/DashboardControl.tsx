@@ -82,6 +82,8 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({dashboards, setDash
       .then(res => {
         if(res.status === 200){
           return res.json();
+        } else if(res.status === 406) {
+          toast.error(`Dashboard Limit Reached`);
         }
         throw new Error(`Failed Creating Dashboard: ${res.status}`);
       })

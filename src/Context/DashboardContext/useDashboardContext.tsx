@@ -129,6 +129,8 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
       .then((res) => {
         if(res.status === 200){
           return res.json();
+        } else if(res.status === 406) {
+          toast.error(`Chart Limit Reached`);
         }
         throw new Error(`Failed Inserting Chart: ${res.status}`);
       })
