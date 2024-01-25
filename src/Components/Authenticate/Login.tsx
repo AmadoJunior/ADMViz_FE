@@ -93,7 +93,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           label="Username or Email"
           name="username"
         />
-        <FormControl variant="outlined">
+        <FormControl variant="outlined" sx={{mt: 1}}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
             id="password"
@@ -122,7 +122,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           fullWidth
           variant="contained"
           loading={authProcessing}
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 2, mb: 2 }}
         >
           Sign In
         </LoadingButton>
