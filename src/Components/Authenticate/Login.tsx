@@ -3,7 +3,7 @@ import React from "react";
 import toast from "react-hot-toast";
 
 //MUI
-import {Box, Avatar, Typography, TextField} from "@mui/material";
+import {Box, Avatar, Typography, TextField, FormControl, OutlinedInput, InputLabel , InputAdornment, IconButton } from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 
 //MUI LAB
@@ -13,6 +13,8 @@ import { LoadingButton } from '@mui/lab';
 import { UserDetailsContext } from "../../Context/UserDetailsContext/useUserDetailsContext";
 
 //Components
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 //Props
 interface ILoginProps {
@@ -27,6 +29,15 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
 
   //Error
   const [errored, setErrored] = React.useState(false);
+
+  //Password
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   //Methods
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
@@ -82,21 +93,36 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           label="Username or Email"
           name="username"
         />
-        <TextField
-          error={errored}
-          margin="normal"
-          required
-          fullWidth
-          name="password"
-          label="Password"
-          type="password"
-        />
+        <FormControl variant="outlined" sx={{mt: 1}}>
+          <InputLabel htmlFor="password">Password</InputLabel>
+          <OutlinedInput
+            id="password"
+            error={errored}
+            required
+            fullWidth
+            type={showPassword ? 'text' : 'password'}
+            endAdornment={
+              <InputAdornment position="end">
+                <IconButton
+                  aria-label="toggle password visibility"
+                  onClick={handleClickShowPassword}
+                  onMouseDown={handleMouseDownPassword}
+                  edge="end"
+                >
+                  {showPassword ? <VisibilityOff /> : <Visibility />}
+                </IconButton>
+              </InputAdornment>
+            }
+            name="password"
+            label="Password"
+          />
+        </FormControl>
         <LoadingButton
           type="submit"
           fullWidth
           variant="contained"
           loading={authProcessing}
-          sx={{ mt: 3, mb: 2 }}
+          sx={{ mt: 2, mb: 2 }}
         >
           Sign In
         </LoadingButton>
