@@ -5,8 +5,12 @@ import toast from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
 
 //MUI
-import {Box, Avatar, Typography, TextField} from "@mui/material";
+import {Box, Avatar, Typography, TextField, FormControl, OutlinedInput, InputLabel , InputAdornment, IconButton, FormHelperText} from "@mui/material";
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+
+//Icons
+import Visibility from '@mui/icons-material/Visibility';
+import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 //MUI LAB
 import { LoadingButton } from '@mui/lab';
@@ -103,6 +107,15 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
   
   //Form Input State
   const [formInputs, setFormInputs] = React.useState<IFormInput[]>([...defaultFormInputs]);
+
+  //Password
+  const [showPassword, setShowPassword] = React.useState(false);
+
+  const handleClickShowPassword = () => setShowPassword((show) => !show);
+
+  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+    event.preventDefault();
+  };
 
   //Form Handlers
   const validateInputs = (formData: FormData): Promise<IRegisterFormData> => {
@@ -284,6 +297,42 @@ const Register: React.FC<IRegisterProps> = ({authProcessing, setAuthProcessing})
       </Typography>
       <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
         {formInputs?.length && formInputs?.map((formInput, index) => {
+          if(formInput.name === "password") {
+            return (
+              <FormControl key={`FormInput:Login:${index}`} variant="outlined" sx={{mb: 2}}>
+                <InputLabel htmlFor={formInput.name}>{formInput.label}</InputLabel>
+                <OutlinedInput
+                  id={formInput.name}
+                  error={formInput?.error}
+                  required
+                  fullWidth
+                  type={showPassword ? 'text' : 'password'}
+                  endAdornment={
+                    <InputAdornment position="end">
+                      <IconButton
+                        aria-label="toggle password visibility"
+                        onClick={handleClickShowPassword}
+                        onMouseDown={handleMouseDownPassword}
+                        edge="end"
+                      >
+                        {showPassword ? <VisibilityOff /> : <Visibility />}
+                      </IconButton>
+                    </InputAdornment>
+                  }
+                  name={formInput.name}
+                  label={formInput.label}
+                />
+                {
+                  formInput?.error && (
+                    <FormHelperText>
+                      {formInput.errorMsg}
+                    </FormHelperText>
+                  )
+                }
+                
+              </FormControl>
+            )
+          }
           return (
             <TextField
               key={`FormInput:Login:${index}`}
