@@ -103,7 +103,6 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       borderRadius: "20px",
       zIndex: 2
     }}>
-    
       <Box sx={{
         display: "flex",
         flexDirection: "column",
