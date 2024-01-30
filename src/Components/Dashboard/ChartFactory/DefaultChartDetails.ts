@@ -1,5 +1,5 @@
 import { DateTime } from "luxon"
-import { ChartType } from "../../../Context/DashboardContext/interfaces";
+import { ChartType } from "chart.js"
 
 export const DefaultChartDetails = (chartName: string) => {
   return {
@@ -7,11 +7,7 @@ export const DefaultChartDetails = (chartName: string) => {
     srcUrl: "",
     dataKey: "",
     labelKey: "",
-    chartType: ChartType.BAR,
+    chartType: "bar" as ChartType,
     method: "GET",
-    apiKey: "",
-    fromDate: 0,
-    toDate: DateTime.now().toMillis(),
   }
-  
 }

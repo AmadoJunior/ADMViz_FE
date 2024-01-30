@@ -3,20 +3,18 @@ import React, {useState, useContext} from "react";
 import { useOutletContext } from "react-router-dom";
 
 //MUI
-import { Box, useTheme } from "@mui/material";
+import { Box } from "@mui/material";
 
 //Components
 import CollapseForm from "../../Utility/CollapseForm/CollapseForm";
 import IconButton from "../../Utility/IconButton/IconButton";
 
 //Constants
-import { COLUMN_WIDTH, MIN_HEIGHT, MIN_WIDTH, GUTTER_SIZE } from '../../../constants';
+import { MIN_HEIGHT, MIN_WIDTH, GUTTER_SIZE } from '../../../constants';
 import { DefaultChartDetails } from "./DefaultChartDetails";
 
 //Context
 import { DashboardContext } from "../../../Context/DashboardContext/useDashboardContext";
-import { ChartType } from "../../../Context/DashboardContext/interfaces";
-import { DateTime } from "luxon";
 
 //Icons
 import LockIcon from '@mui/icons-material/Lock';
