@@ -1,7 +1,8 @@
 //Deps
 import React, {useContext, useEffect} from "react";
-import { ChartType } from "../../../../../Context/DashboardContext/interfaces";
+import { IChartDetails } from "../../../../../Context/DashboardContext/interfaces";
 import { DateTime } from "luxon";
+import { ChartType } from "chart.js";
 
 //MUI
 import {Box, Button, Typography, Checkbox, InputLabel} from "@mui/material";
@@ -10,7 +11,7 @@ import { SelectChangeEvent } from "@mui/material";
 //Components
 import DatePicker from "./DatePicker/DatePicker";
 import CustomSelect from "../../../../Utility/CustomSelect/CustomSelect";
-import CustomInput from "../../../../Utility/CustomInput/CustomInput";
+import CustomInput from "./CustomInput/CustomInput";
 
 //Context
 import { DashboardContext } from "../../../../../Context/DashboardContext/useDashboardContext";
@@ -28,83 +29,70 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
   const dashboardContext = useContext(DashboardContext);
 
   //State
-  const [name, setName] = React.useState<string | undefined>("");
-  const [srcUrl, setSrcUrl] = React.useState<string | undefined>("");
-  const [dataKey, setDataKey] = React.useState<string | undefined>("");
-  const [select, setSelect] = React.useState<string | undefined>();
-  const [where, setWhere] = React.useState<string | undefined>();
-  const [group, setGroup] = React.useState<string | undefined>();
-  const [limit, setLimit] = React.useState<string | undefined>();
-  const [order, setOrder] = React.useState<string | undefined>();
-  const [labelKey, setLabelKey] = React.useState<string | undefined>("");
-  const [method, setMethod] = React.useState<string>("GET");
+  const [chartDetails, setChartDetails] = React.useState<IChartDetails>({
+    name: "",
+    srcUrl: "",
+    dataKey: "",
+    labelKey: "",
+    chartType: "bar" as ChartType,
+    method: "GET"
+  });
   const [dateRangeEnabled, setDateRangeEnabled] = React.useState(false);
-  const [dateColumnKey, setDateColumnKey] = React.useState<string | undefined>();
-  const [chartType, setChartType] = React.useState<string>(ChartType.LINE);
-  const [fromDate, setFromDate] = React.useState<number | undefined>();
-  const [toDate, setToDate] = React.useState<number | undefined>();
 
   //Effects
   useEffect(() => {
     if(chartId){
       const curChart = dashboardContext.getChartById(chartId);
-      if(curChart) {
-        setName(curChart?.details?.name);
-        setSrcUrl(curChart?.details?.srcUrl);
-        setDataKey(curChart?.details?.dataKey);
-        setSelect(curChart?.details?.select);
-        setWhere(curChart?.details?.where);
-        setGroup(curChart?.details?.group);
-        setLimit(curChart?.details?.limit);
-        setOrder(curChart?.details?.order);
-        setLabelKey(curChart?.details?.labelKey);
-        setMethod(curChart?.details?.method);
-        setChartType(curChart?.details?.chartType);
-        setDateColumnKey(curChart?.details?.dateColumnKey);
-        setFromDate(curChart?.details?.fromDate);
-        setToDate(curChart?.details?.toDate);
-      }
+      if(curChart) setChartDetails(curChart?.details);
     }
   }, [chartId])
 
+  //Event Handlers
   const handleMethod = (e: SelectChangeEvent<string>) => {
     e.preventDefault();
-    setMethod(e.target.value);
+    setChartDetails((prev) => {
+      return {
+        ...prev,
+        method: e.target.value,
+      }
+    });
   };
 
   const handleType = (e: SelectChangeEvent<string>) => {
     e.preventDefault();
-    setChartType(e.target.value);
+    setChartDetails((prev) => {
+      return {
+        ...prev,
+        chartType: e.target.value as ChartType,
+      }
+    });
   };
 
   const handleToggleDateRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if(!event.target.checked) {
-      setDateColumnKey(undefined);
-      setFromDate(undefined);
-      setToDate(undefined);
+      setChartDetails((prev) => {
+        return {
+          ...prev,
+          dateColumnKey: undefined,
+          fromDate: undefined,
+          toDate: undefined,
+        }
+      });
     }
     setDateRangeEnabled(event.target.checked);
   };
 
   const onSubmit = () => {
     setIsActive(false);
-    dashboardContext.updateChartDetails(chartId, {
-      name,
-      srcUrl,
-      dataKey,
-      labelKey,
-      chartType,
-      method,
-      select,
-      where,
-      group,
-      limit,
-      order,
-      dateColumnKey,
-      fromDate,
-      toDate
-    })
+    if(chartDetails) dashboardContext.updateChartDetails(chartId, chartDetails);
   };
+
+  const handleUpdateDetail = React.useCallback(<K extends keyof IChartDetails>(key: K, value: IChartDetails[K]) => {
+    setChartDetails(prev => ({
+      ...prev,
+      [key]: value,
+    }));
+  }, [chartDetails, setChartDetails]);
 
   return (
     <Box sx={{
@@ -136,23 +124,27 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         }}>
         <CustomInput 
             title="Chart Name"
-            value={name}
-            setValue={setName}
+            value={chartDetails.name}
+            valueKey="name"
+            setValue={handleUpdateDetail}
         ></CustomInput>
         <CustomInput 
             title="Src Url"
-            value={srcUrl}
-            setValue={setSrcUrl}
+            value={chartDetails.srcUrl}
+            valueKey="srcUrl"
+            setValue={handleUpdateDetail}
         ></CustomInput>
         <CustomInput 
             title="Data Key"
-            value={dataKey}
-            setValue={setDataKey}
+            value={chartDetails.dataKey}
+            valueKey="dataKey"
+            setValue={handleUpdateDetail}
         ></CustomInput>
         <CustomInput 
             title="Label Key"
-            value={labelKey}
-            setValue={setLabelKey}
+            value={chartDetails.labelKey}
+            valueKey="labelKey"
+            setValue={handleUpdateDetail}
         ></CustomInput>
         <Box sx={{
           backgroundColor: 'background.default',
@@ -164,32 +156,37 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
           
           <CustomInput 
               title="$SELECT: "
-              value={select}
-              setValue={setSelect}
+              value={chartDetails.select}
+              valueKey="select"
+              setValue={handleUpdateDetail}
               optional={true}
           ></CustomInput>
           <CustomInput 
               title="$WHERE:"
-              value={where}
-              setValue={setWhere}
+              value={chartDetails.where}
+              valueKey="where"
+              setValue={handleUpdateDetail}
               optional={true}
           ></CustomInput>
           <CustomInput 
               title="$GROUP:"
-              value={group}
-              setValue={setGroup}
+              value={chartDetails.group}
+              valueKey="group"
+              setValue={handleUpdateDetail}
               optional={true}
           ></CustomInput>
            <CustomInput 
               title="$ORDER:"
-              value={order}
-              setValue={setOrder}
+              value={chartDetails.order}
+              valueKey="order"
+              setValue={handleUpdateDetail}
               optional={true}
           ></CustomInput>
           <CustomInput 
               title="$LIMIT:"
-              value={limit}
-              setValue={setLimit}
+              value={chartDetails.limit}
+              valueKey="limit"
+              setValue={handleUpdateDetail}
               optional={true}
           ></CustomInput>
         </Box>
@@ -204,13 +201,13 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         }}>
           <CustomSelect
             title="ChartType"
-            value={chartType}
+            value={chartDetails?.chartType as ChartType}
             handler={handleType}
             options={["line", "bar", "radar", "pie", "doughnut", "polarArea"]}
           ></CustomSelect>
           <CustomSelect
             title="Method"
-            value={method}
+            value={chartDetails?.method}
             handler={handleMethod}
             options={["GET"]}
           ></CustomSelect>
@@ -233,11 +230,12 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
                 <>
                   <CustomInput 
                     title="Date Column Key:"
-                    value={dateColumnKey}
-                    setValue={setDateColumnKey}
+                    value={chartDetails.dateColumnKey}
+                    valueKey="dateColumnKey"
+                    setValue={handleUpdateDetail}
                   ></CustomInput>
                   
-                  <DatePicker fromDate={DateTime.now().minus({ months: 1 }).toMillis()} toDate={DateTime.now().plus({ days: 1 }).toMillis()} setTo={setToDate} setFrom={setFromDate}></DatePicker>
+                  <DatePicker fromDate={DateTime.now().minus({ months: 1 }).toMillis()} toDate={DateTime.now().plus({ days: 1 }).toMillis()} setTo={(value) => handleUpdateDetail("toDate", value)} setFrom={(value) => handleUpdateDetail("fromDate", value)}></DatePicker>
                   
                 </>
               )

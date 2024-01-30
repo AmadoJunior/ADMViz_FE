@@ -1,13 +1,15 @@
 //Deps
-import React, { ChangeEvent } from "react";
+import React from "react";
 
 //MUI
-import { Box, InputLabel, Input, Checkbox, TextField  } from "@mui/material";
+import { Box, InputLabel, Checkbox, TextField  } from "@mui/material";
 
 //Props
+import { IChartDetails } from "../../../../../../Context/DashboardContext/interfaces";
 interface ICustonInputProps {
   title: string;
-  setValue: React.Dispatch<React.SetStateAction<string | undefined>>;
+  setValue: <K extends keyof IChartDetails>(key: K, value: IChartDetails[K]) => void;
+  valueKey: keyof IChartDetails;
   value?: string;
   children?: React.ReactNode;
   optional?: boolean;
@@ -16,22 +18,27 @@ interface ICustonInputProps {
 const CustonInput: React.FC<ICustonInputProps> = ({
   title,
   setValue,
+  valueKey,
   value,
   optional,
 }): JSX.Element => {
+  //State
   const [checked, setChecked] = React.useState(!!value?.length);
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
     if(optional){
-      if(!event.target.checked) setValue(undefined);
+      if(!event.target.checked) setValue(valueKey, undefined);
       setChecked(event.target.checked);
     }
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue(e?.currentTarget?.value);
+  //Update Parent Value on Blur
+  const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    setValue(valueKey, e.target.value);
   }
 
+  //Overwrite Default
   React.useEffect(() => {
     if(!checked && !!value?.length) setChecked(true);
   }, [value])
@@ -61,9 +68,8 @@ const CustonInput: React.FC<ICustonInputProps> = ({
           id={`custom-input-${title}`}
           placeholder="Type in here…" 
           multiline
-          value={value || ""}
-          onChange={handleChange}
-          
+          defaultValue={value}
+          onBlur={handleBlur}
           sx={{
             textAlign: "center",
             width: "100%",
