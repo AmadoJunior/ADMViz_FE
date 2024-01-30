@@ -68,13 +68,10 @@ const CollapseForm = ({formName, inputState, disabled, submitHandler}: ICollapse
             display: "flex",
             alignItems: 'center',
             justifyContent: 'center',
-            button: {
-              flex: "none"
-            }
           }}>
             
           <Button variant="outlined" disabled={disabled} size="small" sx={{
-          height: "30.75px" //Fixed Height for Collapse Bug
+          minHeight: "30.75px" //Fixed Height for Collapse Bug
           }} onClick={() => setIsOpen(prev => !prev)}>{formName}</Button>
         </Box>
       </Collapse>

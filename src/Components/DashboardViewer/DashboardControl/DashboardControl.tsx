@@ -179,7 +179,7 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({dashboards, setDash
       </TabList>
         <CollapseForm
           disabled={disabled}
-          formName="Create Dashboard" 
+          formName="New" 
           inputState={{
             value: newChartName,
             setValue: setNewChartName,
