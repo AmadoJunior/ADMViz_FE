@@ -234,7 +234,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
                     setValue={handleUpdateDetail}
                   ></CustomInput>
                   
-                  <DatePicker fromDate={DateTime.now().minus({ months: 1 }).toMillis()} toDate={DateTime.now().plus({ days: 1 }).toMillis()} setTo={(value) => handleUpdateDetail("toDate", value)} setFrom={(value) => handleUpdateDetail("fromDate", value)}></DatePicker>
+                  <DatePicker fromDate={chartDetails?.fromDate || DateTime.now().minus({ months: 1 }).toMillis()} toDate={chartDetails?.toDate || DateTime.now().plus({ days: 1 }).toMillis()} setTo={(value) => handleUpdateDetail("toDate", value)} setFrom={(value) => handleUpdateDetail("fromDate", value)}></DatePicker>
                   
                 </>
               )

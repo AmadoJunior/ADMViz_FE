@@ -33,10 +33,10 @@ const DatePicker: React.FC<IDatePickerProps> = ({fromDate, toDate, setFrom, setT
       width: "100%",
       marginBottom: "20px",
     }}>
-      <XDatePicker label="From" onChange={(newValue) => handleFrom(newValue as DateTime)} defaultValue={DateTime.fromMillis(fromDate)} sx={{
+      <XDatePicker label="From" onChange={(newValue) => handleFrom(newValue as DateTime)} defaultValue={DateTime.fromMillis(fromDate)} maxDate={DateTime.fromMillis(toDate)} sx={{
         paddingRight: "20px"
       }}/>
-      <XDatePicker label="To" onChange={(newValue) => handleTo(newValue as DateTime)} defaultValue={DateTime.fromMillis(toDate)}/>
+      <XDatePicker label="To" onChange={(newValue) => handleTo(newValue as DateTime)} defaultValue={DateTime.fromMillis(toDate)} minDate={DateTime.fromMillis(fromDate)}/>
     </Box>
   );
 }
