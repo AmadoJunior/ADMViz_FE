@@ -16,10 +16,10 @@ import CustomIconButton from "../../../Utility/IconButton/IconButton";
 
 //Interfaces
 import {
-  ChartType, IChartDetails,
+  IChartDetails,
 } from "../../../../Context/DashboardContext/interfaces";
-import { ChartData } from "chart.js";
-import useDashboardContext, { DashboardContext } from "../../../../Context/DashboardContext/useDashboardContext";
+import { ChartData, ChartType } from "chart.js";
+import { DashboardContext } from "../../../../Context/DashboardContext/useDashboardContext";
 
 //Props
 type WorkerModule = typeof import('./WorkerScript/fetcherWorker.worker');
@@ -75,20 +75,7 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
     ) {
       console.log("Called Worker Method...");
       setIsLoading(true);
-      worker.fetchData({
-        srcUrl: chartDetails.srcUrl,
-        dataKey: chartDetails.dataKey,
-        labelKey: chartDetails.labelKey,
-        method: chartDetails.method,
-        dateColumnKey: chartDetails.dateColumnKey,
-        from: chartDetails.fromDate,
-        to: chartDetails.toDate,
-        select: chartDetails.select, 
-        where: chartDetails.where, 
-        group: chartDetails.group, 
-        limit: chartDetails.limit,
-        order: chartDetails.order
-      })
+      worker.fetchData(chartDetails)
       .then((data) => {
         const { error, chartData } = data;
         if (!error) {

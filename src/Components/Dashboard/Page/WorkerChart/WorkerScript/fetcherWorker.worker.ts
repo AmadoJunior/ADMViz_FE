@@ -3,43 +3,23 @@ declare const self: DedicatedWorkerGlobalScope;
 
 import { ChartDataset } from "chart.js";
 //Int
-import {FetchDataDTO, WorkerResponse, FetchDatasetResponse} from "./interfaces";
+import {WorkerResponse, FetchDatasetResponse} from "./interfaces";
 import { DateTime } from "luxon";
+import { IChartDetails } from "../../../../../Context/DashboardContext/interfaces";
 
 
-function generateQuery(
-    dateColumnKey?: string,
-    from?: number,
-    to?: number,
-    select?: string,
-    where?: string,
-    group?: string,
-    order?: string,
-    limit?: string
-  ) {
-    if(dateColumnKey?.length && from !== undefined && to !== undefined){
-      const startDate = DateTime.fromMillis(from).toFormat("y-LL-dd");
-      const endDate = DateTime.fromMillis(to).toFormat("y-LL-dd");
-      return `?${select ? `$select=${select}&` : ""}$where=${dateColumnKey} between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
-    }
-    
-    return `?${select ? `$select=${select}` : ""}${where ? `&$where=${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
+function generateQuery(chartDetails: IChartDetails) {
+  const {select, where, group, limit, order} = chartDetails;
+  if(chartDetails?.dateColumnKey?.length && chartDetails?.fromDate !== undefined && chartDetails?.toDate !== undefined){
+    const startDate = DateTime.fromMillis(chartDetails?.fromDate).toFormat("y-LL-dd");
+    const endDate = DateTime.fromMillis(chartDetails?.toDate).toFormat("y-LL-dd");
+    return `?${select ? `$select=${select}&` : ""}$where=${chartDetails?.dateColumnKey} between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
   }
+  
+  return `?${select ? `$select=${select}` : ""}${where ? `&$where=${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
+}
 
-async function fetchDataset(
-  srcUrl: string,
-  dataKey: string,
-  labelKey: string,
-  method: string,
-  dateColumnKey?: string,
-  from?: number,
-  to?: number,
-  select?: string,
-  where?: string,
-  group?: string,
-  order?: string,
-  limit?: string,
-): Promise<FetchDatasetResponse> {
+async function fetchDataset(chartDetails: IChartDetails): Promise<FetchDatasetResponse> {
   const labels = [];
   const data = [];
   let responseJson;
@@ -47,17 +27,20 @@ async function fetchDataset(
 
   try {
     const res = await fetch(
-      `${srcUrl}${generateQuery(dateColumnKey, from, to, select, where, group, order, limit)}`,
+      `${chartDetails?.srcUrl}${generateQuery(chartDetails)}`,
       {
-        method: method,
+        method: chartDetails?.method,
       }
     );
 
     responseJson = await res.json();
     if (res.status === 200) {
+      const {labelKey, dataKey} = chartDetails;
       for (let point of responseJson) {
-        labels.push(point?.[labelKey] || point?._id?.[labelKey]);
-        data.push(point[dataKey]);
+        if(labelKey && dataKey) {
+          labels.push(point?.[labelKey] || point?._id?.[labelKey]);
+          data.push(point[dataKey]);
+        }
       }
     } else {
       throw new Error(responseJson?.message);
@@ -71,30 +54,17 @@ async function fetchDataset(
     labels,
     data,
     error,
-    label: dataKey,
+    label: chartDetails?.dataKey || "Unknown",
   };
 }
 
-export const fetchData = async ({ srcUrl, dataKey, labelKey, method, dateColumnKey, from, to, select, where, group, order, limit }: FetchDataDTO): Promise<WorkerResponse> => {
+export const fetchData = async (chartDetails: IChartDetails): Promise<WorkerResponse> => {
   const datasetsArr: ChartDataset[] = [];
   const labelsSet = new Set<string>();
 
   let labelsArr: string[] = [];
 
-    const { labels, data, error, label } = await fetchDataset(
-      srcUrl,
-      dataKey,
-      labelKey,
-      method,
-      dateColumnKey,
-      from,
-      to,
-      select, 
-      where, 
-      group, 
-      order,
-      limit,
-    );
+    const { labels, data, error, label } = await fetchDataset(chartDetails);
 
     //Labels
     for (const label of labels) {

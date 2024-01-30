@@ -1,20 +1,5 @@
 import { ChartData } from "chart.js";
 
-export interface FetchDataDTO {
-  srcUrl: string,
-  dataKey: string,
-  method: string,
-  labelKey: string,
-  dateColumnKey?: string;
-  from?: number,
-  to?: number,
-  select?: string,
-  where?: string,
-  group?: string,
-  order?: string,
-  limit?: string,
-}
-
 export interface FetchDatasetResponse {
   labels: string[],
   data: string[],
