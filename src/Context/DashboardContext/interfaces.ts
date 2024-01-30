@@ -1,11 +1,4 @@
-export enum ChartType {
-  LINE = "line",
-  BAR = "bar",
-  PIE = "pie",
-  DOUGHTNUT = "doughnut",
-  POLARAREA = "polarArea",
-  RADAR = "radar",
-}
+import { ChartType } from "chart.js";
 
 export interface IChartPosition {
   id: number,
@@ -27,7 +20,7 @@ export interface IChartDetails {
   limit?: string;
   dataKey?: string;
   labelKey?: string;
-  chartType: string;
+  chartType: ChartType;
   method: string;
   dateColumnKey?: string;
   fromDate?: number;
