@@ -60,6 +60,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
         setLabelKey(curChart?.details?.labelKey);
         setMethod(curChart?.details?.method);
         setChartType(curChart?.details?.chartType);
+        setDateColumnKey(curChart?.details?.dateColumnKey);
         setFromDate(curChart?.details?.fromDate);
         setToDate(curChart?.details?.toDate);
       }
@@ -78,7 +79,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
 
   const handleToggleDateRange = (event: React.ChangeEvent<HTMLInputElement>) => {
     if(!event.target.checked) {
-      setDataKey(undefined);
+      setDateColumnKey(undefined);
       setFromDate(undefined);
       setToDate(undefined);
     }

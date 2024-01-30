@@ -71,8 +71,7 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
         chartDetails.dataKey?.length &&
         chartDetails.labelKey?.length &&
         chartDetails.method?.length &&
-        chartDetails.chartType?.length &&
-        chartDetails.toDate
+        chartDetails.chartType?.length
     ) {
       console.log("Called Worker Method...");
       setIsLoading(true);
@@ -81,6 +80,7 @@ const WorkerChart: React.FC<IWorkerChartProps> = ({
         dataKey: chartDetails.dataKey,
         labelKey: chartDetails.labelKey,
         method: chartDetails.method,
+        dateColumnKey: chartDetails.dateColumnKey,
         from: chartDetails.fromDate,
         to: chartDetails.toDate,
         select: chartDetails.select, 
