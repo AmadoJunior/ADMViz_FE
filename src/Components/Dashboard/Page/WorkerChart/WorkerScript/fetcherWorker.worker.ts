@@ -8,26 +8,32 @@ import { DateTime } from "luxon";
 
 
 function generateQuery(
-    from: number,
-    to: number,
+    dateColumnKey?: string,
+    from?: number,
+    to?: number,
     select?: string,
     where?: string,
     group?: string,
     order?: string,
     limit?: string
   ) {
-    const startDate = DateTime.fromMillis(from).toFormat("y-LL-dd");
-    const endDate = DateTime.fromMillis(to).toFormat("y-LL-dd");
-    return `?${select ? `$select=${select}&` : ""}$where=crash_date between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
+    if(dateColumnKey?.length && from !== undefined && to !== undefined){
+      const startDate = DateTime.fromMillis(from).toFormat("y-LL-dd");
+      const endDate = DateTime.fromMillis(to).toFormat("y-LL-dd");
+      return `?${select ? `$select=${select}&` : ""}$where=${dateColumnKey} between '${startDate}T00:00:00' and '${endDate}T23:59:59'${where ? `and ${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
+    }
+    
+    return `?${select ? `$select=${select}` : ""}${where ? `&$where=${where}` : ""}${group ? `&$group=${group}` : ""}${order ? `&$order=${order}` : ""}${limit ? `&$limit=${limit}` : ""}`;
   }
 
 async function fetchDataset(
   srcUrl: string,
   dataKey: string,
   labelKey: string,
-  from: number,
-  to: number,
   method: string,
+  dateColumnKey?: string,
+  from?: number,
+  to?: number,
   select?: string,
   where?: string,
   group?: string,
@@ -41,7 +47,7 @@ async function fetchDataset(
 
   try {
     const res = await fetch(
-      `${srcUrl}${generateQuery(from, to, select, where, group, order, limit)}`,
+      `${srcUrl}${generateQuery(dateColumnKey, from, to, select, where, group, order, limit)}`,
       {
         method: method,
       }
@@ -69,7 +75,7 @@ async function fetchDataset(
   };
 }
 
-export const fetchData = async ({ srcUrl, dataKey, labelKey, method, from, to, select, where, group, order, limit }: FetchDataDTO): Promise<WorkerResponse> => {
+export const fetchData = async ({ srcUrl, dataKey, labelKey, method, dateColumnKey, from, to, select, where, group, order, limit }: FetchDataDTO): Promise<WorkerResponse> => {
   const datasetsArr: ChartDataset[] = [];
   const labelsSet = new Set<string>();
 
@@ -79,9 +85,10 @@ export const fetchData = async ({ srcUrl, dataKey, labelKey, method, from, to, s
       srcUrl,
       dataKey,
       labelKey,
+      method,
+      dateColumnKey,
       from,
       to,
-      method,
       select, 
       where, 
       group, 

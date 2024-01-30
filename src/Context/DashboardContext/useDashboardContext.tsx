@@ -188,17 +188,18 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
       if(data?.["_embedded"]?.["charts"]) {
         setCharts(data?.["_embedded"]?.["charts"].map((chart: {
           id: number,
-          name: string;
-          srcUrl: string;
-          dataKey: string;
-          labelKey: string;
-          chartType: string;
-          method: string;
-          select?: string;
+          name: string,
+          srcUrl: string,
+          dataKey: string,
+          labelKey: string,
+          chartType: string,
+          method: string,
+          select?: string,
           where?: string,
           group?: string,
           order?: string,
           limit?: string,
+          dateColumnKey: string,
           fromDate: number,
           toDate: number,
           position: IChartPosition,
@@ -217,6 +218,7 @@ const useDashboardContext = (props: IDashboardContextHookProps): IDashboardConte
               group: chart?.group,
               order: chart?.order,
               limit: chart?.limit,
+              dateColumnKey: chart?.dateColumnKey,
               fromDate: chart?.fromDate,
               toDate: chart?.toDate
             },

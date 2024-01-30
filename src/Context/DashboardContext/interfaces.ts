@@ -21,16 +21,17 @@ export interface IChartDetails {
   name?: string;
   srcUrl?: string;
   select?: string;
-  where?: string,
-  group?: string,
-  order?: string,
-  limit?: string,
+  where?: string;
+  group?: string;
+  order?: string;
+  limit?: string;
   dataKey?: string;
   labelKey?: string;
   chartType: string;
   method: string;
-  fromDate: number;
-  toDate: number;
+  dateColumnKey?: string;
+  fromDate?: number;
+  toDate?: number;
 }
 
 export interface IChart {

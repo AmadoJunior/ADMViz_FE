@@ -5,8 +5,9 @@ export interface FetchDataDTO {
   dataKey: string,
   method: string,
   labelKey: string,
-  from: number,
-  to: number,
+  dateColumnKey?: string;
+  from?: number,
+  to?: number,
   select?: string,
   where?: string,
   group?: string,

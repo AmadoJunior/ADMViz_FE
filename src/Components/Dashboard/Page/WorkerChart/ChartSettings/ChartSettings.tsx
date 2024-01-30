@@ -4,7 +4,7 @@ import { ChartType } from "../../../../../Context/DashboardContext/interfaces";
 import { DateTime } from "luxon";
 
 //MUI
-import {Box, Button, Typography, Checkbox} from "@mui/material";
+import {Box, Button, Typography, Checkbox, InputLabel} from "@mui/material";
 import { SelectChangeEvent } from "@mui/material";
 
 //Components
@@ -38,13 +38,11 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
   const [order, setOrder] = React.useState<string | undefined>();
   const [labelKey, setLabelKey] = React.useState<string | undefined>("");
   const [method, setMethod] = React.useState<string>("GET");
+  const [dateRangeEnabled, setDateRangeEnabled] = React.useState(false);
+  const [dateColumnKey, setDateColumnKey] = React.useState<string | undefined>();
   const [chartType, setChartType] = React.useState<string>(ChartType.LINE);
-  const [fromDate, setFromDate] = React.useState<number>(
-    DateTime.now().minus({ months: 1 }).toMillis()
-  );
-  const [toDate, setToDate] = React.useState<number>(
-    DateTime.now().plus({ days: 1 }).toMillis()
-  );
+  const [fromDate, setFromDate] = React.useState<number | undefined>();
+  const [toDate, setToDate] = React.useState<number | undefined>();
 
   //Effects
   useEffect(() => {
@@ -78,6 +76,15 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
     setChartType(e.target.value);
   };
 
+  const handleToggleDateRange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if(!event.target.checked) {
+      setDataKey(undefined);
+      setFromDate(undefined);
+      setToDate(undefined);
+    }
+    setDateRangeEnabled(event.target.checked);
+  };
+
   const onSubmit = () => {
     setIsActive(false);
     dashboardContext.updateChartDetails(chartId, {
@@ -92,6 +99,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
       group,
       limit,
       order,
+      dateColumnKey,
       fromDate,
       toDate
     })
@@ -191,7 +199,7 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
           flexDirection: "row",
           justifyContent: "flex-start",
           width: "100%",
-          marginBottom: "20px"
+          marginBottom: "10px"
         }}>
           <CustomSelect
             title="ChartType"
@@ -206,8 +214,33 @@ const ChartSettings: React.FC<IChartSettingsProps> = ({chartId, isActive, setIsA
             options={["GET"]}
           ></CustomSelect>
         </Box>
-        
-        <DatePicker fromDate={fromDate} toDate={toDate} setTo={setToDate} setFrom={setFromDate}></DatePicker>
+        <Box sx={{
+          display: "flex",
+          alignItems:"center",
+          marginBottom: dateRangeEnabled ? "0px" : "10px"
+        }}>
+          <InputLabel>Date Range Selector</InputLabel>
+          <Checkbox 
+            checked={dateRangeEnabled}
+            onChange={handleToggleDateRange}
+            inputProps={{ 'aria-label': 'controlled' }} 
+          />
+        </Box>
+          {
+            dateRangeEnabled && 
+              (
+                <>
+                  <CustomInput 
+                    title="Date Column Key:"
+                    value={dateColumnKey}
+                    setValue={setDateColumnKey}
+                  ></CustomInput>
+                  
+                  <DatePicker fromDate={DateTime.now().minus({ months: 1 }).toMillis()} toDate={DateTime.now().plus({ days: 1 }).toMillis()} setTo={setToDate} setFrom={setFromDate}></DatePicker>
+                  
+                </>
+              )
+          }
         </Box>
         
         <Button variant="contained" onClick={onSubmit} sx={{
