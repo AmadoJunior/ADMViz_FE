@@ -1,4 +1,5 @@
-import { DateTime } from "luxon"
+import { DateTime } from "luxon";
+import { ChartType } from "chart.js";
 
 export const demoCharts = [
   {
@@ -13,7 +14,7 @@ export const demoCharts = [
       "order": "sum_new_deaths",
       "limit": "",
       "labelKey": "characteristic_group",
-      "chartType": "bar",
+      "chartType": "bar" as ChartType,
       "method": "GET",
       "dateColumnKey": "",
       "fromDate": DateTime.now().minus({months: 3}).toMillis(),
@@ -39,7 +40,7 @@ export const demoCharts = [
       "order": "sum_new_deaths",
       "limit": "",
       "labelKey": "characteristic_group",
-      "chartType": "bar",
+      "chartType": "bar" as ChartType,
       "method": "GET",
       "dateColumnKey": "",
       "fromDate": DateTime.now().minus({months: 3}).toMillis(),
@@ -65,7 +66,7 @@ export const demoCharts = [
       "order": "sum_new_deaths",
       "limit": "",
       "labelKey": "characteristic_group",
-      "chartType": "pie",
+      "chartType": "pie" as ChartType,
       "method": "GET",
       "dateColumnKey": "",
       "fromDate": DateTime.now().minus({months: 3}).toMillis(),
