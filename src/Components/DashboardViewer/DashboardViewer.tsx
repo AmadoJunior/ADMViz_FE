@@ -111,7 +111,6 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({
   return (
     <Box
       sx={{
-        padding: "10px 10px 10px 10px",
         width: "100%",
       }}
     >

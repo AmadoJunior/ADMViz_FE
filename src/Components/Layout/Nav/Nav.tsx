@@ -1,6 +1,6 @@
 //Deps
 import React from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 
 //MUI LAB
@@ -71,6 +71,7 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
   //Misc
   const theme = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
 
   const [logoutLoading, setLogoutLoading] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -96,8 +97,8 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
           //opaqueredirect
           toast.success("Successfull Logout");
           userDetailsContext.clearAuthentication();
+          navigate("/authenticate");
         } else {
-          console.log(response);
           throw new Error(`Failed Logout: ${response.status}`);
         }
       })

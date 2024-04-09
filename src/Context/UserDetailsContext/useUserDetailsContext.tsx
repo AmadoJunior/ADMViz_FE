@@ -1,25 +1,24 @@
 //Deps
-import { createContext, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { createContext } from "react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 //Interfaces
 import { IUserDetailsContext, IUserDetails } from "./interfaces";
 
 //Context
 export const UserDetailsContext = createContext<IUserDetailsContext>({
-  isAuthenticated: null,
+  isLoading: false,
+  isAuthenticated: false,
   clearAuthentication: (): void => {},
 });
 
 export const useUserDetailsContext = (): IUserDetailsContext => {
-  //State
-  const [userDetails, setUserDetails] = useState<IUserDetails | undefined>();
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null);
+  const queryClient = useQueryClient();
 
   // Queries
-  const { isPending, error, data, isFetching } = useQuery({
+  const { isLoading, isSuccess, data } = useQuery({
     queryKey: ["getSelf"],
-    queryFn: () => {
+    queryFn: (): Promise<IUserDetails> => {
       return fetch(`/api/self`, {
         method: "GET",
       })
@@ -30,27 +29,23 @@ export const useUserDetailsContext = (): IUserDetailsContext => {
         })
         .then((data) => {
           if (!data) throw new Error("Could Not Get User Details JSON");
-          setUserDetails(data);
-          //Set Is Auth
-          setIsAuthenticated(true);
           return data;
-        })
-        .catch((e) => {
-          console.error(e);
-          //Set State
-          clearAuthentication();
-
-          throw e;
         });
     },
   });
 
   const clearAuthentication = (): void => {
-    setUserDetails(undefined);
-    setIsAuthenticated(false);
+    queryClient.removeQueries({
+      queryKey: ["getSelf"],
+    });
   };
 
-  return { userDetails, isAuthenticated, clearAuthentication };
+  return {
+    userDetails: data,
+    isAuthenticated: isSuccess,
+    isLoading,
+    clearAuthentication,
+  };
 };
 
 export default useUserDetailsContext;

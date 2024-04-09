@@ -3,6 +3,7 @@ import React from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Routes, Route } from "react-router-dom";
+import toast from "react-hot-toast";
 
 //Css
 import "./App.css";
@@ -11,16 +12,15 @@ import "./App.css";
 import { Box } from "@mui/material";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
+import {
+  QueryClient,
+  QueryCache,
+  QueryClientProvider,
+} from "@tanstack/react-query";
 
 //Component
 import Layout from "./Components/Layout/Layout";
 import Demo from "./Components/Demo/Demo";
-
-//Context
-import {
-  useUserDetailsContext,
-  UserDetailsContext,
-} from "./Context/UserDetailsContext/useUserDetailsContext";
 
 import Authenticate from "./Components/Authenticate/Authenticate";
 import Login from "./Components/Authenticate/Login";
@@ -54,21 +54,33 @@ const darkTheme = createTheme({
   },
 });
 
+const queryClient = new QueryClient({
+  queryCache: new QueryCache({
+    onError: (error, query) => {
+      if (query?.meta?.errorMessage) {
+        toast.error(String(query.meta.errorMessage));
+      }
+    },
+  }),
+});
+
 function App() {
   //User
-  const userDetailsContext = useUserDetailsContext();
   const [authProcessing, setAuthProcessing] = React.useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
-      <ThemeProvider theme={darkTheme}>
-        <CssBaseline />
-        <UserDetailsContext.Provider value={userDetailsContext}>
+      <QueryClientProvider client={queryClient}>
+        <ThemeProvider theme={darkTheme}>
+          <CssBaseline />
+
           <Box
             className="App"
             sx={{
               backgroundColor: "black",
               minHeight: "100vh",
+              display: "flex",
+              flexDirection: "column",
             }}
           >
             <Routes>
@@ -108,8 +120,8 @@ function App() {
               </Route>
             </Routes>
           </Box>
-        </UserDetailsContext.Provider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </QueryClientProvider>
     </LocalizationProvider>
   );
 }

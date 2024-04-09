@@ -2,7 +2,6 @@
 import React from "react";
 import toast from "react-hot-toast";
 import { useQueryClient } from "@tanstack/react-query";
-import { useNavigate } from "react-router-dom";
 
 //MUI
 import {
@@ -21,9 +20,6 @@ import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 //MUI LAB
 import { LoadingButton } from "@mui/lab";
 
-//Context
-import { UserDetailsContext } from "../../Context/UserDetailsContext/useUserDetailsContext";
-
 //Components
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
@@ -39,12 +35,6 @@ const Login: React.FC<ILoginProps> = ({
   authProcessing,
   setAuthProcessing,
 }): JSX.Element => {
-  //Nav
-  const navigate = useNavigate();
-
-  //User Details
-  const userDetailsContext = React.useContext(UserDetailsContext);
-
   //Error
   const [errored, setErrored] = React.useState(false);
 
@@ -81,9 +71,6 @@ const Login: React.FC<ILoginProps> = ({
             });
           }
           throw new Error(`Failed Login: ${response.status}`);
-        })
-        .then(() => {
-          navigate("/");
         })
         .catch((e) => {
           setErrored(true);

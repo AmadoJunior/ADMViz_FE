@@ -1,9 +1,9 @@
 //Deps
-import React, { ReactElement } from "react";
+import React from "react";
 import useSearchParam from "../useQueryState";
 
 //MUI
-import { Box, Button } from "@mui/material";
+import { Box } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 
 //Components
@@ -31,11 +31,12 @@ const Authenticate: React.FC<IAuthenticateProps> = ({
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        width: "100%",
         maxWidth: "500px",
         backgroundColor: "background.paper",
         padding: "20px 40px 20px 40px",
         borderRadius: "10px",
+        height: "100%",
+        width: "100%",
       }}
     >
       <Box

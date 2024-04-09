@@ -24,7 +24,10 @@ import LockOpenIcon from "@mui/icons-material/LockOpen";
 import { findFreeSpace } from "../Page/Module/CollisionHelpers";
 
 //Props
-type ContextType = { isAuthenticated: boolean | null | undefined };
+type ContextType = {
+  isAuthenticated: boolean;
+  isLoading: boolean;
+};
 interface IChartFactoryProps {
   children?: React.ReactNode;
   disabled?: boolean;

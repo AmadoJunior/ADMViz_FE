@@ -20,6 +20,7 @@ export interface IUserDetails {
 
 export interface IUserDetailsContext {
   userDetails?: IUserDetails,
-  isAuthenticated: boolean | null,
+  isAuthenticated: boolean,
+  isLoading: boolean,
   clearAuthentication: () => void,
 }

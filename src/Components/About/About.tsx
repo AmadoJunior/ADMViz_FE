@@ -34,9 +34,7 @@ const About: React.FC<IAboutProps> = (props): JSX.Element => {
         display: "flex",
         flexDirection: "column",
         alignItems: "flex-start",
-
         backgroundColor: "background.paper",
-        margin: "10px",
         borderRadius: "10px",
         height: "100%",
         width: "100%",
