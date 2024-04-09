@@ -2,6 +2,7 @@
 import React from "react";
 import toast from "react-hot-toast";
 import { useQueryClient } from '@tanstack/react-query'
+import { useNavigate } from "react-router-dom";
 
 //MUI
 import {Box, Avatar, Typography, TextField, FormControl, OutlinedInput, InputLabel , InputAdornment, IconButton } from "@mui/material";
@@ -25,6 +26,9 @@ interface ILoginProps {
 }
 
 const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.Element => {
+  //Nav
+  const navigate = useNavigate();
+
   //User Details
   const userDetailsContext = React.useContext(UserDetailsContext);
 
@@ -62,6 +66,9 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           })
         }
         throw new Error(`Failed Login: ${response.status}`);
+      })
+      .then(() => {
+        navigate("/")
       })
       .catch(e => {
         setErrored(true);

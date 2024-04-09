@@ -1,6 +1,5 @@
 //Deps
 import {createContext, useState} from "react";
-import {useNavigate} from "react-router-dom";
 import {useQuery} from "@tanstack/react-query";
 
 //Interfaces
@@ -13,8 +12,7 @@ export const UserDetailsContext = createContext<IUserDetailsContext>({
 });
 
 export const useUserDetailsContext = (): IUserDetailsContext => {
-  //Nav
-  const navigate = useNavigate();
+  
 
   //State
   const [userDetails, setUserDetails] = useState<IUserDetails | undefined>();
@@ -23,26 +21,29 @@ export const useUserDetailsContext = (): IUserDetailsContext => {
   // Queries
   const { isPending, error, data, isFetching } = useQuery({
     queryKey: ['getSelf'],
-    queryFn: () =>
-      fetch(`/api/self`, {
-        method: "GET"
-      })
-        .then(res => {
-          if(res.status !== 200) throw new Error("Could Not Get User Details RES");
-          return res.json();
+    queryFn: () => {
+        return fetch(`/api/self`, {
+          method: "GET"
         })
-        .then(data => {
-          if(!data) throw new Error("Could Not Get User Details JSON");
-          setUserDetails(data);
-          //Set Is Auth
-          setIsAuthenticated(true);
-          navigate("/");
-        })
-        .catch(e => {
-          console.error(e);
-          //Set State
-          clearAuthentication();
-        })
+          .then(res => {
+            if(res.status !== 200) throw new Error("Could Not Get User Details RES");
+            return res.json();
+          })
+          .then(data => {
+            if(!data) throw new Error("Could Not Get User Details JSON");
+            setUserDetails(data);
+            //Set Is Auth
+            setIsAuthenticated(true);
+            return data;
+          })
+          .catch(e => {
+            console.error(e);
+            //Set State
+            clearAuthentication();
+
+            throw e;
+          })
+      }
   })
 
   const clearAuthentication = (): void => {
