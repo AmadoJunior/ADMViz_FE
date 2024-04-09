@@ -12,6 +12,7 @@
     "@mui/x-date-pickers": "^6.11.2",
     "@react-hook/passive-layout-effect": "^1.2.1",
     "@react-hook/resize-observer": "^1.2.6",
+    "@tanstack/react-query": "^5.29.0",
     "@types/colormap": "^2.3.2",
     "@types/luxon": "^3.3.1",
     "@types/react": "^18.2.20",

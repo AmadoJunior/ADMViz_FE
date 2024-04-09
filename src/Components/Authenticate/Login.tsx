@@ -1,6 +1,7 @@
 //Deps
 import React from "react";
 import toast from "react-hot-toast";
+import { useQueryClient } from '@tanstack/react-query'
 
 //MUI
 import {Box, Avatar, Typography, TextField, FormControl, OutlinedInput, InputLabel , InputAdornment, IconButton } from "@mui/material";
@@ -40,6 +41,8 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
   };
 
   //Methods
+  const queryClient = useQueryClient()
+
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
@@ -54,7 +57,9 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
         if(response.status === 200){
           setErrored(false);
           toast.success("Successfull Login");
-          return userDetailsContext.handleIsAuthenticated();
+          return queryClient.invalidateQueries({
+            queryKey: ['getSelf'],
+          })
         }
         throw new Error(`Failed Login: ${response.status}`);
       })
@@ -76,6 +81,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
+        width: "100%"
       }}
     >
       <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
@@ -84,7 +90,7 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
       <Typography component="h1" variant="h5">
         Sign In
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 1 }}>
+      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: "flex", flexDirection: "column", width: "100%", mt: 1 }}>
         <TextField
           error={errored}
           margin="normal"

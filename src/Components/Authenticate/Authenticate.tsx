@@ -35,7 +35,7 @@ const Authenticate: React.FC<IAuthenticateProps> = ({children, childrenProps, au
     >
       <Box sx={{
         
-        
+        width: "100%",
       }}>
         {children?.length && children[parseInt(currentForm)]}
       </Box>

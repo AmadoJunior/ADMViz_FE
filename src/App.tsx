@@ -55,7 +55,7 @@ function App() {
   //User
   const userDetailsContext = useUserDetailsContext();
   const [authProcessing, setAuthProcessing] = React.useState(false);
-
+  
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
       <ThemeProvider theme={darkTheme}>

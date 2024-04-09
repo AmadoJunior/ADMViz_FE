@@ -21,6 +21,5 @@ export interface IUserDetails {
 export interface IUserDetailsContext {
   userDetails?: IUserDetails,
   isAuthenticated: boolean | null,
-  handleIsAuthenticated: () => Promise<void>,
   clearAuthentication: () => void,
 }
