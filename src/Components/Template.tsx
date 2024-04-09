@@ -2,7 +2,7 @@
 import React from "react";
 
 //MUI
-import {Box} from "@mui/material";
+import { Box } from "@mui/material";
 
 //Components
 
@@ -12,11 +12,7 @@ interface ITemplateProps {
 }
 
 const Template: React.FC<ITemplateProps> = (props): JSX.Element => {
-  return (
-    <Box >
-      {props?.children}
-    </Box>
-  );
-}
+  return <Box>{props?.children}</Box>;
+};
 
 export default React.memo(Template);

@@ -1,13 +1,13 @@
 //Deps
-import React, {useEffect, useRef} from "react";
-import { Colors } from 'chart.js';
+import React, { useEffect, useRef } from "react";
+import { Colors } from "chart.js";
 import {
   Chart as ChartJS,
   ChartType,
   ChartData,
-  registerables
-} from 'chart.js';
-import { Chart } from 'react-chartjs-2';
+  registerables,
+} from "chart.js";
+import { Chart } from "react-chartjs-2";
 
 //MUI
 import { Box } from "@mui/material";
@@ -18,32 +18,32 @@ export const options = {
   responsive: true,
   plugins: {
     colors: {
-      forceOverride: true
+      forceOverride: true,
     },
     legend: {
-      position: 'top' as const,
+      position: "top" as const,
 
       labels: {
-        color: 'white', // Set the default text color for legend labels
-      }
+        color: "white", // Set the default text color for legend labels
+      },
     },
     title: {
       display: true,
-      color: 'white'
+      color: "white",
     },
   },
   scales: {
-    x: { 
-        grid: {
-          color: "#302f2f"
-        },
-        ticks: {
-          color: "white",
-        }
+    x: {
+      grid: {
+        color: "#302f2f",
+      },
+      ticks: {
+        color: "white",
+      },
     },
     y: {
       grid: {
-        color: "#302f2f"
+        color: "#302f2f",
       },
       ticks: {
         color: "white",
@@ -54,37 +54,44 @@ export const options = {
 
 //Props
 interface IAbstractChartProps {
-  children?: React.ReactNode,
-  type: ChartType,
-  data: ChartData
+  children?: React.ReactNode;
+  type: ChartType;
+  data: ChartData;
 }
 
-ChartJS.register(
-  ...registerables,
-  Colors
-);
+ChartJS.register(...registerables, Colors);
 
-const AbstractChart: React.FC<IAbstractChartProps> = (({type, data}): JSX.Element => {
+const AbstractChart: React.FC<IAbstractChartProps> = ({
+  type,
+  data,
+}): JSX.Element => {
   const chartRef = useRef<ChartJS>();
-  
+
   useEffect(() => {
     chartRef?.current?.update();
-  }, [data])
-  
+  }, [data]);
+
   return (
-    <Box sx={{
-      height: "100%",
-      width: "100%",
-      backgroundColor: "background.paper",
-      padding: "10px",
-      borderRadius: "10px",
-      border: "1px solid",
-      borderColor: "#302f2f",
-    }}>
-      <Chart type={type} ref={chartRef} options={options} data={data} updateMode="resize"  />
+    <Box
+      sx={{
+        height: "100%",
+        width: "100%",
+        backgroundColor: "background.paper",
+        padding: "10px",
+        borderRadius: "10px",
+        border: "1px solid",
+        borderColor: "#302f2f",
+      }}
+    >
+      <Chart
+        type={type}
+        ref={chartRef}
+        options={options}
+        data={data}
+        updateMode="resize"
+      />
     </Box>
-    
   );
-});
+};
 
 export default React.memo(AbstractChart);

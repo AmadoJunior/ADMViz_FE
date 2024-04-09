@@ -3,27 +3,38 @@ import React from "react";
 
 //MUI
 import { Box } from "@mui/material";
-import CircularProgress from '@mui/material/CircularProgress';
+import CircularProgress from "@mui/material/CircularProgress";
 import Tooltip from "@mui/material/Tooltip";
 
 //Props
 interface IIconButtonProps {
-  title: string,
-  loading?: boolean,
-  disabled?: boolean,
-  handler: () => void,
+  title: string;
+  loading?: boolean;
+  disabled?: boolean;
+  handler: () => void;
   children?: React.ReactNode;
 }
 
-const CustomIconButton: React.FC<IIconButtonProps> = ({title, loading, disabled, handler, children}): JSX.Element => {
+const CustomIconButton: React.FC<IIconButtonProps> = ({
+  title,
+  loading,
+  disabled,
+  handler,
+  children,
+}): JSX.Element => {
   return (
     <Box
       sx={{
         position: "relative",
-        display: "flex"
+        display: "flex",
       }}
     >
-      <Tooltip placement="right" arrow disableHoverListener={disabled} title={title}>
+      <Tooltip
+        placement="right"
+        arrow
+        disableHoverListener={disabled}
+        title={title}
+      >
         <Box
           onClick={disabled ? () => {} : handler}
           sx={[
@@ -46,16 +57,18 @@ const CustomIconButton: React.FC<IIconButtonProps> = ({title, loading, disabled,
             },
             () => ({
               "&:hover": {
-                backgroundColor: disabled ?  "background.paper" : "background.default"
+                backgroundColor: disabled
+                  ? "background.paper"
+                  : "background.default",
               },
             }),
           ]}
         >
-          {loading ? (<CircularProgress size={20}/>) : children}
+          {loading ? <CircularProgress size={20} /> : children}
         </Box>
       </Tooltip>
     </Box>
   );
-}
+};
 
 export default React.memo(CustomIconButton);

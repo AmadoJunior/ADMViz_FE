@@ -10,17 +10,20 @@ interface IProtectedRouteProps {
   children: React.ReactElement;
 }
 
-const ProtectedRoute: React.FC<IProtectedRouteProps> = ({children}): JSX.Element => {
-  const {isAuthenticated} = useOutletContext<ContextType>();
+const ProtectedRoute: React.FC<IProtectedRouteProps> = ({
+  children,
+}): JSX.Element => {
+  const { isAuthenticated } = useOutletContext<ContextType>();
 
-  return( 
+  return (
     <>
-    {
-      isAuthenticated === false ? 
-        (<Navigate to={`/authenticate`}></Navigate>)  :
-        (children)
-    }
-    </>);
-}
+      {isAuthenticated === false ? (
+        <Navigate to={`/authenticate`}></Navigate>
+      ) : (
+        children
+      )}
+    </>
+  );
+};
 
 export default React.memo(ProtectedRoute);

@@ -1,11 +1,14 @@
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from "react-router-dom";
 
-const useSearchParam = (key: string, defaultValue: string): [string, (value?: string) => void] => {
+const useSearchParam = (
+  key: string,
+  defaultValue: string
+): [string, (value?: string) => void] => {
   const [searchParams, setSearchParams] = useSearchParams();
 
   const setter = (value?: string) => {
     const newParams = new URLSearchParams(searchParams.toString());
-    if(value){
+    if (value) {
       newParams.set(key, value);
       setSearchParams(newParams);
     } else {

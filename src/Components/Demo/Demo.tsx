@@ -12,9 +12,7 @@ interface IDemoProps {
 }
 
 const Demo: React.FC<IDemoProps> = (props): JSX.Element => {
-  return (
-    <DashboardViewer demo={true}></DashboardViewer>
-  );
-}
+  return <DashboardViewer demo={true}></DashboardViewer>;
+};
 
 export default React.memo(Demo);

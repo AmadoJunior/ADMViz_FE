@@ -2,13 +2,16 @@
 import React from "react";
 
 //MUI
-import { Box, InputLabel, Checkbox, TextField  } from "@mui/material";
+import { Box, InputLabel, Checkbox, TextField } from "@mui/material";
 
 //Props
 import { IChartDetails } from "../../../../../../Context/DashboardContext/interfaces";
 interface ICustonInputProps {
   title: string;
-  setValue: <K extends keyof IChartDetails>(key: K, value: IChartDetails[K]) => void;
+  setValue: <K extends keyof IChartDetails>(
+    key: K,
+    value: IChartDetails[K]
+  ) => void;
   valueKey: keyof IChartDetails;
   value?: string;
   children?: React.ReactNode;
@@ -26,8 +29,8 @@ const CustonInput: React.FC<ICustonInputProps> = ({
   const [checked, setChecked] = React.useState(!!value?.length);
 
   const handleToggle = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if(optional){
-      if(!event.target.checked) setValue(valueKey, undefined);
+    if (optional) {
+      if (!event.target.checked) setValue(valueKey, undefined);
       setChecked(event.target.checked);
     }
   };
@@ -36,12 +39,12 @@ const CustonInput: React.FC<ICustonInputProps> = ({
   const handleBlur = (e: React.FocusEvent<HTMLInputElement>) => {
     e.preventDefault();
     setValue(valueKey, e.target.value);
-  }
+  };
 
   //Overwrite Default
   React.useEffect(() => {
-    if(!checked && !!value?.length) setChecked(true);
-  }, [value])
+    if (!checked && !!value?.length) setChecked(true);
+  }, [value]);
 
   return (
     <Box
@@ -50,23 +53,25 @@ const CustonInput: React.FC<ICustonInputProps> = ({
         flexDirection: "column",
       }}
     >
-      <Box sx={{
-        display: "flex",
-        alignItems:"center"
-      }}>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+        }}
+      >
         <InputLabel htmlFor={`custom-input-${title}`}>{title}</InputLabel>
-        {optional && <Checkbox 
-          checked={checked}
-          onChange={handleToggle}
-          inputProps={{ 'aria-label': 'controlled' }} 
-
-        />}
+        {optional && (
+          <Checkbox
+            checked={checked}
+            onChange={handleToggle}
+            inputProps={{ "aria-label": "controlled" }}
+          />
+        )}
       </Box>
-      {
-        (checked || !optional) && (
+      {(checked || !optional) && (
         <TextField
           id={`custom-input-${title}`}
-          placeholder="Type in here…" 
+          placeholder="Type in here…"
           multiline
           defaultValue={value}
           onBlur={handleBlur}
@@ -76,9 +81,7 @@ const CustonInput: React.FC<ICustonInputProps> = ({
             marginBottom: "20px",
           }}
         />
-        )
-      }
-      
+      )}
     </Box>
   );
 };

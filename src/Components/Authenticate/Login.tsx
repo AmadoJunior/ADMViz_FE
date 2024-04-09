@@ -1,22 +1,32 @@
 //Deps
 import React from "react";
 import toast from "react-hot-toast";
-import { useQueryClient } from '@tanstack/react-query'
+import { useQueryClient } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
 
 //MUI
-import {Box, Avatar, Typography, TextField, FormControl, OutlinedInput, InputLabel , InputAdornment, IconButton } from "@mui/material";
-import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
+import {
+  Box,
+  Avatar,
+  Typography,
+  TextField,
+  FormControl,
+  OutlinedInput,
+  InputLabel,
+  InputAdornment,
+  IconButton,
+} from "@mui/material";
+import LockOutlinedIcon from "@mui/icons-material/LockOutlined";
 
 //MUI LAB
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton } from "@mui/lab";
 
 //Context
 import { UserDetailsContext } from "../../Context/UserDetailsContext/useUserDetailsContext";
 
 //Components
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 
 //Props
 interface ILoginProps {
@@ -25,7 +35,10 @@ interface ILoginProps {
   setAuthProcessing: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.Element => {
+const Login: React.FC<ILoginProps> = ({
+  authProcessing,
+  setAuthProcessing,
+}): JSX.Element => {
   //Nav
   const navigate = useNavigate();
 
@@ -40,44 +53,46 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
-  const handleMouseDownPassword = (event: React.MouseEvent<HTMLButtonElement>) => {
+  const handleMouseDownPassword = (
+    event: React.MouseEvent<HTMLButtonElement>
+  ) => {
     event.preventDefault();
   };
 
   //Methods
-  const queryClient = useQueryClient()
+  const queryClient = useQueryClient();
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const formData = new FormData(event.currentTarget);
-    if(formData.get("username") && formData.get("password")){
+    if (formData.get("username") && formData.get("password")) {
       setAuthProcessing(true);
       fetch(`/api/perform_login`, {
         method: "POST",
         body: formData,
       })
-      .then(response => {
-        console.log(response);
-        if(response.status === 200){
-          setErrored(false);
-          toast.success("Successfull Login");
-          return queryClient.invalidateQueries({
-            queryKey: ['getSelf'],
-          })
-        }
-        throw new Error(`Failed Login: ${response.status}`);
-      })
-      .then(() => {
-        navigate("/")
-      })
-      .catch(e => {
-        setErrored(true);
-        toast.error("Failed Login");
-        console.error(e);
-      })
-      .finally(() => {
-        setAuthProcessing(false);
-      })
+        .then((response) => {
+          console.log(response);
+          if (response.status === 200) {
+            setErrored(false);
+            toast.success("Successfull Login");
+            return queryClient.invalidateQueries({
+              queryKey: ["getSelf"],
+            });
+          }
+          throw new Error(`Failed Login: ${response.status}`);
+        })
+        .then(() => {
+          navigate("/");
+        })
+        .catch((e) => {
+          setErrored(true);
+          toast.error("Failed Login");
+          console.error(e);
+        })
+        .finally(() => {
+          setAuthProcessing(false);
+        });
     } else {
     }
   };
@@ -85,19 +100,24 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
   return (
     <Box
       sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        width: "100%"
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        width: "100%",
       }}
     >
-      <Avatar sx={{ m: 1, bgcolor: 'primary.main' }}>
-        <LockOutlinedIcon/>
+      <Avatar sx={{ m: 1, bgcolor: "primary.main" }}>
+        <LockOutlinedIcon />
       </Avatar>
       <Typography component="h1" variant="h5">
         Sign In
       </Typography>
-      <Box component="form" onSubmit={handleSubmit} noValidate sx={{ display: "flex", flexDirection: "column", width: "100%", mt: 1 }}>
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        noValidate
+        sx={{ display: "flex", flexDirection: "column", width: "100%", mt: 1 }}
+      >
         <TextField
           error={errored}
           margin="normal"
@@ -106,14 +126,14 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
           label="Username or Email"
           name="username"
         />
-        <FormControl variant="outlined" sx={{mt: 1}}>
+        <FormControl variant="outlined" sx={{ mt: 1 }}>
           <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
             id="password"
             error={errored}
             required
             fullWidth
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             endAdornment={
               <InputAdornment position="end">
                 <IconButton
@@ -142,6 +162,6 @@ const Login: React.FC<ILoginProps> = ({authProcessing, setAuthProcessing}): JSX.
       </Box>
     </Box>
   );
-}
+};
 
 export default React.memo(Login);

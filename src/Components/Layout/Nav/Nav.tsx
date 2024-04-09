@@ -4,7 +4,7 @@ import { Link, useLocation } from "react-router-dom";
 import toast from "react-hot-toast";
 
 //MUI LAB
-import { LoadingButton } from '@mui/lab';
+import { LoadingButton } from "@mui/lab";
 
 //MUI
 import {
@@ -30,7 +30,7 @@ import { UserDetailsContext } from "../../../Context/UserDetailsContext/useUserD
 import MenuIcon from "@mui/icons-material/Menu";
 import QueryStatsIcon from "@mui/icons-material/QueryStats";
 import MapIcon from "@mui/icons-material/Map";
-import InfoIcon from '@mui/icons-material/Info';
+import InfoIcon from "@mui/icons-material/Info";
 
 //Props
 interface INavProps {
@@ -42,7 +42,7 @@ interface IPage {
   title: string;
   path: string;
   icon: typeof SvgIcon;
-  public?: boolean,
+  public?: boolean;
 }
 const pages: IPage[] = [
   {
@@ -89,25 +89,26 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
   const handleLogout = () => {
     setLogoutLoading(true);
     fetch(`/api/perform_logout`, {
-      redirect: 'manual',
+      redirect: "manual",
     })
-    .then(response => {
-      if(response.status === 200 || response.status === 0){ //opaqueredirect
-        toast.success("Successfull Logout");
-        userDetailsContext.clearAuthentication();
-      } else {
-        console.log(response);
-        throw new Error(`Failed Logout: ${response.status}`);
-      }
-    })
-    .catch(e => {
-      toast.error("Failed Logout");
-      console.error(e);
-    })
-    .finally(() => {
-      setLogoutLoading(false);
-    })
-  }
+      .then((response) => {
+        if (response.status === 200 || response.status === 0) {
+          //opaqueredirect
+          toast.success("Successfull Logout");
+          userDetailsContext.clearAuthentication();
+        } else {
+          console.log(response);
+          throw new Error(`Failed Logout: ${response.status}`);
+        }
+      })
+      .catch((e) => {
+        toast.error("Failed Logout");
+        console.error(e);
+      })
+      .finally(() => {
+        setLogoutLoading(false);
+      });
+  };
 
   return (
     <AppBar
@@ -117,12 +118,14 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
         backgroundColor: "background.paper",
       }}
     >
-      <Box sx={{
-        width: "100%",
-        paddingX: "20px",
-        maxWidth: "100%"
-      }}>
-        <Toolbar  variant="dense" disableGutters>
+      <Box
+        sx={{
+          width: "100%",
+          paddingX: "20px",
+          maxWidth: "100%",
+        }}
+      >
+        <Toolbar variant="dense" disableGutters>
           <Box
             sx={{
               marginRight: 2,
@@ -132,7 +135,9 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
               },
             }}
           >
-            <Typography variant="h6" color="primary">ADMViz</Typography>
+            <Typography variant="h6" color="primary">
+              ADMViz
+            </Typography>
           </Box>
 
           <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
@@ -177,20 +182,24 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
               {pages?.map((item, index) => {
                 return (
                   <Box key={item.path}>
-                    <Link
-                      to={item.path}
-                    >
+                    <Link to={item.path}>
                       <MenuItem
                         onClick={handleCloseNavMenu}
-                        disabled={!userDetailsContext?.isAuthenticated && !item.public}
+                        disabled={
+                          !userDetailsContext?.isAuthenticated && !item.public
+                        }
                       >
                         <ListItemIcon>
-                          <item.icon/>
+                          <item.icon />
                         </ListItemIcon>
                         <ListItemText disableTypography>
-                          <Typography sx={{
-                            color: "white"
-                          }}>{item.title}</Typography>
+                          <Typography
+                            sx={{
+                              color: "white",
+                            }}
+                          >
+                            {item.title}
+                          </Typography>
                         </ListItemText>
                       </MenuItem>
                     </Link>
@@ -205,7 +214,9 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
               return (
                 <Link key={page.path} to={`${page?.path}`}>
                   <Button
-                    disabled={!userDetailsContext?.isAuthenticated && !page.public}
+                    disabled={
+                      !userDetailsContext?.isAuthenticated && !page.public
+                    }
                     variant="outlined"
                     key={page?.path}
                     onClick={handleCloseNavMenu}
@@ -213,7 +224,10 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
                     sx={[
                       {
                         mx: 1,
-                        backgroundColor: location.pathname === page.path ? "rgba(0, 0, 0, 0.3)" : "none"
+                        backgroundColor:
+                          location.pathname === page.path
+                            ? "rgba(0, 0, 0, 0.3)"
+                            : "none",
                       },
                     ]}
                   >
@@ -223,35 +237,42 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
               );
             })}
           </Box>
-            {userDetailsContext.isAuthenticated ? <LoadingButton 
+          {userDetailsContext.isAuthenticated ? (
+            <LoadingButton
               loading={logoutLoading}
-              onClick={handleLogout} 
+              onClick={handleLogout}
               variant="outlined"
               color="error"
               size="small"
+            >
+              Log Out
+            </LoadingButton>
+          ) : (
+            <Link key={`/authenticate`} to={`/authenticate`}>
+              <Button
+                variant="outlined"
+                key={`/authenticate`}
+                onClick={handleCloseNavMenu}
+                size="small"
+                sx={[
+                  {
+                    mx: 1,
+                    color: "success.main",
+                    borderColor: "success.dark",
+                    backgroundColor:
+                      location.pathname === "/authenticate"
+                        ? "rgba(0, 0, 0, 0.3)"
+                        : "none",
+                    "&:hover": {
+                      borderColor: "success.main",
+                    },
+                  },
+                ]}
               >
-                Log Out
-            </LoadingButton> : <Link key={`/authenticate`} to={`/authenticate`}>
-                  <Button
-                    variant="outlined"
-                    key={`/authenticate`}
-                    onClick={handleCloseNavMenu}
-                    size="small"
-                    sx={[
-                      {
-                        mx: 1,
-                        color: "success.main",
-                        borderColor: "success.dark",
-                        backgroundColor: location.pathname === "/authenticate" ? "rgba(0, 0, 0, 0.3)" : "none",
-                        "&:hover": {
-                          borderColor: "success.main",
-                        },
-                      },
-                    ]}
-                  >
-                    <Typography variant="subtitle2">{"Sign In"}</Typography>
-                  </Button>
-                </Link>}
+                <Typography variant="subtitle2">{"Sign In"}</Typography>
+              </Button>
+            </Link>
+          )}
         </Toolbar>
       </Box>
     </AppBar>
