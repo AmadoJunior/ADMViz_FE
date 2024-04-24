@@ -29,7 +29,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 1,
     "details": {
       "name": "Fatalities by Age Group (2021-2022)",
       "srcUrl": "https://data.sfgov.org/resource/kkr3-wq7h.json",
@@ -55,7 +55,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 2,
     "details": {
       "name": "Fatalities by Gender (2021-2022)",
       "srcUrl": "https://data.sfgov.org/resource/kkr3-wq7h.json",
@@ -81,7 +81,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 3,
     "details": {
       "name": "Cases by Vaccination Status (2021-2022)",
       "srcUrl": "https://data.sfgov.org/resource/gqw3-444p.json",
@@ -107,7 +107,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 4,
     "details": {
       "name": "Fatalities By Month in 2021",
       "srcUrl": "https://data.sfgov.org/resource/kkr3-wq7h.json",
@@ -133,7 +133,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 5,
     "details": {
       "name": "Fatalities By Month in 2022",
       "srcUrl": "https://data.sfgov.org/resource/kkr3-wq7h.json",
@@ -159,7 +159,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 6,
     "details": {
       "name": "Vaccinations By Month in 2021",
       "srcUrl": "https://data.sfgov.org/resource/rutu-rpar.json",
@@ -185,7 +185,7 @@ export const demoCharts = [
     }
   },
   {
-    "chartId": 0,
+    "chartId": 7,
     "details": {
       "name": "Vaccinations By Month in 2022",
       "srcUrl": "https://data.sfgov.org/resource/rutu-rpar.json",
