@@ -30,6 +30,11 @@ import About from "./Components/About/About";
 import ProtectedRoute from "./Components/ProtectedRoute/ProtectedRoute";
 import DashboardGrid from "./Components/DashboardViewer/DashboardViewer";
 
+interface Meta {
+  successMessage?: string;
+  errorMessage?: string;
+}
+
 //Darkest #08090a
 //Gray #111214
 //Border #302f2f
@@ -58,25 +63,31 @@ const darkTheme = createTheme({
 const queryClient = new QueryClient({
   mutationCache: new MutationCache({
     onSuccess: (data, variables, context, mutation) => {
-      if (mutation?.meta?.successMessage) {
-        toast.success(String(mutation.meta.successMessage));
+      const { successMessage } = mutation.meta as Meta;
+      if (successMessage?.length) {
+        toast.success(successMessage);
       }
     },
     onError: (error, variables, context, mutation) => {
-      if (mutation?.meta?.errorMessage) {
-        toast.error(String(mutation.meta.errorMessage));
+      const { errorMessage } = mutation.meta as Meta;
+
+      if (errorMessage?.length) {
+        toast.error(errorMessage);
       }
     },
   }),
   queryCache: new QueryCache({
     onSuccess: (data, query) => {
-      if (query?.meta?.successMessage) {
-        toast.success(String(query.meta.successMessage));
+      const { successMessage } = query.meta as Meta;
+      if (successMessage?.length) {
+        toast.success(successMessage);
       }
     },
     onError: (error, query) => {
-      if (query?.meta?.errorMessage) {
-        toast.error(String(query.meta.errorMessage));
+      const { errorMessage } = query.meta as Meta;
+
+      if (errorMessage?.length) {
+        toast.error(errorMessage);
       }
     },
   }),
