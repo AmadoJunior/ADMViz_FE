@@ -3,6 +3,7 @@ import React, { useEffect } from "react";
 import { Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useQueryClient } from "@tanstack/react-query";
 
 //MUI
 import { Box, useTheme } from "@mui/material";
@@ -22,6 +23,7 @@ interface ILayoutProps {
 }
 
 const Layout: React.FC<ILayoutProps> = (): JSX.Element => {
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -32,9 +34,13 @@ const Layout: React.FC<ILayoutProps> = (): JSX.Element => {
   const userDetailsContext = useUserDetailsContext();
 
   useEffect(() => {
-    const { isAuthenticated } = userDetailsContext;
-    if (isAuthenticated && location.pathname === "/authenticate") {
-      navigate("/");
+    if (!queryClient?.isFetching() && !queryClient?.isMutating()) {
+      const { isAuthenticated } = userDetailsContext;
+      if (!isAuthenticated) {
+        navigate("/authenticate");
+      } else if (isAuthenticated && location.pathname === "/authenticate") {
+        navigate("/");
+      }
     }
   }, [userDetailsContext.isAuthenticated]);
 

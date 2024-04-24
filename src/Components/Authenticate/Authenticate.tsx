@@ -1,5 +1,5 @@
 //Deps
-import React from "react";
+import React, { useState } from "react";
 import useSearchParam from "../useQueryState";
 
 //MUI
@@ -12,15 +12,13 @@ import { LoadingButton } from "@mui/lab";
 interface IAuthenticateProps {
   children?: React.ReactNode[];
   childrenProps: { label: string; index: number }[];
-  authProcessing: boolean;
-  setAuthProcessing: React.Dispatch<React.SetStateAction<boolean>>;
+  authPending: boolean;
 }
 
 const Authenticate: React.FC<IAuthenticateProps> = ({
   children,
   childrenProps,
-  authProcessing,
-  setAuthProcessing,
+  authPending,
 }): JSX.Element => {
   const [currentForm, setCurrentForm] = useSearchParam("authForm", "0");
 
@@ -59,7 +57,7 @@ const Authenticate: React.FC<IAuthenticateProps> = ({
             <LoadingButton
               key={`${item.label}${String(item.index)}`}
               variant="outlined"
-              loading={authProcessing}
+              loading={authPending}
               onClick={() => {
                 setCurrentForm(String(item.index));
               }}

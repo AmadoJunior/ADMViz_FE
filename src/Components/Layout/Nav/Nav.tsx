@@ -1,7 +1,7 @@
 //Deps
 import React from "react";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
+import { Link, useLocation } from "react-router-dom";
+import { useQueryClient, useMutation } from "@tanstack/react-query";
 
 //MUI LAB
 import { LoadingButton } from "@mui/lab";
@@ -65,13 +65,14 @@ const pages: IPage[] = [
 ];
 
 const Nav: React.FC<INavProps> = (): JSX.Element => {
+  const queryClient = useQueryClient();
+
   //User Details
   const userDetailsContext = React.useContext(UserDetailsContext);
 
   //Misc
   const theme = useTheme();
   const location = useLocation();
-  const navigate = useNavigate();
 
   const [logoutLoading, setLogoutLoading] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(
@@ -87,28 +88,26 @@ const Nav: React.FC<INavProps> = (): JSX.Element => {
   };
 
   //Logout Handler
-  const handleLogout = () => {
-    setLogoutLoading(true);
-    fetch(`/api/perform_logout`, {
-      redirect: "manual",
-    })
-      .then((response) => {
+  const logoutMutation = useMutation({
+    mutationKey: ["getLogout"],
+    mutationFn: () => {
+      return fetch(`/api/perform_logout`, {
+        redirect: "manual",
+      }).then((response) => {
         if (response.status === 200 || response.status === 0) {
-          //opaqueredirect
-          toast.success("Successfull Logout");
           userDetailsContext.clearAuthentication();
-          navigate("/authenticate");
         } else {
           throw new Error(`Failed Logout: ${response.status}`);
         }
-      })
-      .catch((e) => {
-        toast.error("Failed Logout");
-        console.error(e);
-      })
-      .finally(() => {
-        setLogoutLoading(false);
       });
+    },
+    meta: {
+      successMessage: "Successful Logout",
+      errorMessage: "Failed Logout",
+    },
+  });
+  const handleLogout = () => {
+    logoutMutation.mutate();
   };
 
   return (

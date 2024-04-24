@@ -1,7 +1,6 @@
 //Deps
 import React from "react";
-import toast from "react-hot-toast";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 //MUI
 import {
@@ -27,17 +26,10 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 //Props
 interface ILoginProps {
   children?: React.ReactNode;
-  authProcessing: boolean;
-  setAuthProcessing: React.Dispatch<React.SetStateAction<boolean>>;
+  setAuthPending: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const Login: React.FC<ILoginProps> = ({
-  authProcessing,
-  setAuthProcessing,
-}): JSX.Element => {
-  //Error
-  const [errored, setErrored] = React.useState(false);
-
+const Login: React.FC<ILoginProps> = ({ setAuthPending }): JSX.Element => {
   //Password
   const [showPassword, setShowPassword] = React.useState(false);
 
@@ -52,34 +44,35 @@ const Login: React.FC<ILoginProps> = ({
   //Methods
   const queryClient = useQueryClient();
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
-    if (formData.get("username") && formData.get("password")) {
-      setAuthProcessing(true);
-      fetch(`/api/perform_login`, {
+  const loginMutation = useMutation({
+    mutationKey: ["postLogin"],
+    mutationFn: (formData: FormData) => {
+      return fetch(`/api/perform_login`, {
         method: "POST",
         body: formData,
       })
         .then((response) => {
-          console.log(response);
-          if (response.status === 200) {
-            setErrored(false);
-            toast.success("Successfull Login");
-            return queryClient.invalidateQueries({
-              queryKey: ["getSelf"],
-            });
-          }
-          throw new Error(`Failed Login: ${response.status}`);
-        })
-        .catch((e) => {
-          setErrored(true);
-          toast.error("Failed Login");
-          console.error(e);
+          if (response.status !== 200) throw new Error("Failed Login");
+          queryClient.invalidateQueries({
+            queryKey: ["getSelf"],
+          });
         })
         .finally(() => {
-          setAuthProcessing(false);
+          setAuthPending(false);
         });
+    },
+    meta: {
+      successMessage: "Successful Login",
+      errorMessage: "Failed Login",
+    },
+  });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    const formData = new FormData(event.currentTarget);
+    if (formData.get("username") && formData.get("password")) {
+      setAuthPending(true);
+      loginMutation.mutate(formData);
     } else {
     }
   };
@@ -106,7 +99,7 @@ const Login: React.FC<ILoginProps> = ({
         sx={{ display: "flex", flexDirection: "column", width: "100%", mt: 1 }}
       >
         <TextField
-          error={errored}
+          error={loginMutation.isError}
           margin="normal"
           required
           fullWidth
@@ -117,7 +110,7 @@ const Login: React.FC<ILoginProps> = ({
           <InputLabel htmlFor="password">Password</InputLabel>
           <OutlinedInput
             id="password"
-            error={errored}
+            error={loginMutation.isError}
             required
             fullWidth
             type={showPassword ? "text" : "password"}
@@ -141,7 +134,7 @@ const Login: React.FC<ILoginProps> = ({
           type="submit"
           fullWidth
           variant="contained"
-          loading={authProcessing}
+          loading={loginMutation.isPending}
           sx={{ mt: 2, mb: 2 }}
         >
           Sign In

@@ -1,5 +1,5 @@
 //Deps
-import React from "react";
+import React, { useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterLuxon } from "@mui/x-date-pickers/AdapterLuxon";
 import { Routes, Route } from "react-router-dom";
@@ -16,6 +16,7 @@ import {
   QueryClient,
   QueryCache,
   QueryClientProvider,
+  MutationCache,
 } from "@tanstack/react-query";
 
 //Component
@@ -55,7 +56,24 @@ const darkTheme = createTheme({
 });
 
 const queryClient = new QueryClient({
+  mutationCache: new MutationCache({
+    onSuccess: (data, variables, context, mutation) => {
+      if (mutation?.meta?.successMessage) {
+        toast.success(String(mutation.meta.successMessage));
+      }
+    },
+    onError: (error, variables, context, mutation) => {
+      if (mutation?.meta?.errorMessage) {
+        toast.error(String(mutation.meta.errorMessage));
+      }
+    },
+  }),
   queryCache: new QueryCache({
+    onSuccess: (data, query) => {
+      if (query?.meta?.successMessage) {
+        toast.success(String(query.meta.successMessage));
+      }
+    },
     onError: (error, query) => {
       if (query?.meta?.errorMessage) {
         toast.error(String(query.meta.errorMessage));
@@ -65,8 +83,7 @@ const queryClient = new QueryClient({
 });
 
 function App() {
-  //User
-  const [authProcessing, setAuthProcessing] = React.useState(false);
+  const [authPending, setAuthPending] = useState(false);
 
   return (
     <LocalizationProvider dateAdapter={AdapterLuxon}>
@@ -99,21 +116,14 @@ function App() {
                   path="/authenticate"
                   element={
                     <Authenticate
-                      authProcessing={authProcessing}
-                      setAuthProcessing={setAuthProcessing}
                       childrenProps={[
                         { label: "Sign In", index: 0 },
                         { label: "Register", index: 1 },
                       ]}
+                      authPending={authPending}
                     >
-                      <Login
-                        authProcessing={authProcessing}
-                        setAuthProcessing={setAuthProcessing}
-                      />
-                      <Register
-                        authProcessing={authProcessing}
-                        setAuthProcessing={setAuthProcessing}
-                      />
+                      <Login setAuthPending={setAuthPending} />
+                      <Register setAuthPending={setAuthPending} />
                     </Authenticate>
                   }
                 />

@@ -32,10 +32,15 @@ export const useUserDetailsContext = (): IUserDetailsContext => {
           return data;
         });
     },
+    retry: 2,
+    enabled: true,
   });
 
   const clearAuthentication = (): void => {
-    queryClient.removeQueries({
+    queryClient.resetQueries({
+      queryKey: ["getSelf"],
+    });
+    queryClient.cancelQueries({
       queryKey: ["getSelf"],
     });
   };

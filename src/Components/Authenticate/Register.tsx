@@ -3,6 +3,7 @@ import React from "react";
 import useSearchParam from "./../useQueryState";
 import toast from "react-hot-toast";
 import ReCAPTCHA from "react-google-recaptcha";
+import { useMutation } from "@tanstack/react-query";
 
 //MUI
 import {
@@ -31,8 +32,7 @@ import { LoadingButton } from "@mui/lab";
 //Props
 interface IRegisterProps {
   children?: React.ReactNode;
-  authProcessing: boolean;
-  setAuthProcessing: React.Dispatch<React.SetStateAction<boolean>>;
+  setAuthPending: React.Dispatch<React.SetStateAction<boolean>>;
 }
 interface IFormInput {
   label: string;
@@ -109,8 +109,7 @@ const defaultFormInputs: IFormInput[] = [
 ];
 
 const Register: React.FC<IRegisterProps> = ({
-  authProcessing,
-  setAuthProcessing,
+  setAuthPending,
 }): JSX.Element => {
   // Form Nav State
   const [currentForm, setCurrentForm] = useSearchParam("authForm", "0");
@@ -136,6 +135,42 @@ const Register: React.FC<IRegisterProps> = ({
   };
 
   //Form Handlers
+  const signUpMutation = useMutation({
+    mutationKey: ["postSignUp"],
+    mutationFn: (jsonData: IRegisterFormData) => {
+      setAuthPending(true);
+      return fetch(`/api/perform_register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ...jsonData, token }),
+      })
+        .then((response) => {
+          if (response?.status === 201) {
+            return setCurrentForm();
+          } else if (response?.status === 409) {
+            const conflictTarget = "userName";
+            const conflictValue = jsonData.userName;
+            const conflictMessage = "Username Unavailable";
+            addException(conflictTarget, {
+              regex: RegExp(`^${conflictValue}$`),
+              msg: conflictMessage,
+            });
+            toast.error("Username Unavailable");
+          }
+          throw new Error("Error: " + response);
+        })
+        .finally(() => {
+          setAuthPending(false);
+          recaptchaRef?.current?.reset();
+        });
+    },
+    meta: {
+      successMessage: "Successfull Register",
+      errorMessage: "Failed Register",
+    },
+  });
   const validateInputs = (formData: FormData): Promise<IRegisterFormData> => {
     return new Promise((resolve, reject) => {
       const { isValid, updatedFormInputs } = formInputs.reduce<{
@@ -265,41 +300,9 @@ const Register: React.FC<IRegisterProps> = ({
     if (!token?.length) return;
 
     const formData = new FormData(event.currentTarget);
-    validateInputs(formData)
-      .then((jsonData: IRegisterFormData) => {
-        setAuthProcessing(true);
-        return fetch(`/api/perform_register`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ...jsonData, token }),
-        }).then((response) => {
-          console.log(response);
-          if (response?.status === 201) {
-            toast.success("Successfull Register");
-            return setCurrentForm();
-          } else if (response?.status === 409) {
-            const conflictTarget = "userName";
-            const conflictValue = jsonData.userName;
-            const conflictMessage = "Username Unavailable";
-            addException(conflictTarget, {
-              regex: RegExp(`^${conflictValue}$`),
-              msg: conflictMessage,
-            });
-            toast.error("Username Unavailable");
-          }
-          throw new Error("Error: " + response);
-        });
-      })
-      .catch((e) => {
-        toast.error("Failed Register");
-        console.log(e);
-      })
-      .finally(() => {
-        setAuthProcessing(false);
-        recaptchaRef?.current?.reset();
-      });
+    validateInputs(formData).then((jsonData) =>
+      signUpMutation.mutate(jsonData)
+    );
   };
 
   //Captcha Handlers
@@ -399,7 +402,7 @@ const Register: React.FC<IRegisterProps> = ({
           type="submit"
           fullWidth
           variant="contained"
-          loading={authProcessing}
+          loading={signUpMutation.isPending}
           sx={{ mt: 2, mb: 2 }}
           disabled={!token}
         >
