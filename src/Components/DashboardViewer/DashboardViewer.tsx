@@ -1,6 +1,7 @@
 //Deps
 import React from "react";
 import toast from "react-hot-toast";
+import { useQuery } from "@tanstack/react-query";
 
 //MUI
 import { Box, Skeleton } from "@mui/material";
@@ -36,30 +37,20 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({
 
   //User
   const userDetailsContext = React.useContext(UserDetailsContext);
-
-  //Dashboards
-  const [loading, setLoading] = React.useState(true);
-  const [dashboards, setDashboards] = React.useState<IDashboard[]>([]);
+  const [userId, setUserId] = React.useState<number | undefined>(undefined);
 
   //Tab State
   const [curTab, setCurTab] = React.useState("0");
 
   //Effect
   React.useEffect(() => {
-    if (demo) {
-      setDashboards([
-        {
-          id: 0,
-          name: "Demo",
-        },
-      ]);
-      setLoading(false);
-    } else if (
+    if (
+      !demo &&
       userDetailsContext?.isAuthenticated &&
       userDetailsContext?.userDetails
     ) {
       const { id } = userDetailsContext?.userDetails;
-      fetchDashboards(id);
+      setUserId(id);
     }
   }, [userDetailsContext?.isAuthenticated]);
 
@@ -80,33 +71,40 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({
   }, []);
 
   //API Helpers
-  const fetchDashboards = (userId: number) => {
-    fetch(`/sdr/users/${userId}/dashboards`, {
-      method: "GET",
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        }
-        throw new Error(`Failed Fetching Dashboards: ${res.status}`);
+  const { data, isPending } = useQuery({
+    queryKey: ["getDashboards"],
+    queryFn: () => {
+      return fetch(`/sdr/users/${userId}/dashboards`, {
+        method: "GET",
       })
-      .then((data) => {
-        console.log(data);
-        if (data?.["_embedded"]?.["dashboards"]) {
-          return setDashboards(data?.["_embedded"]?.["dashboards"]);
-        }
-        throw new Error(
-          `Failed Extracting Dashboards: ${JSON.stringify(data, null, 1)}`
-        );
-      })
-      .catch((e) => {
-        toast.error("Failed Fetching Dashboards");
-        console.error(e);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-  };
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          }
+          throw new Error(`Failed Fetching Dashboards: ${res.status}`);
+        })
+        .then((data) => {
+          if (data?.["_embedded"]?.["dashboards"])
+            return data?.["_embedded"]?.["dashboards"] as IDashboard[];
+
+          throw new Error(
+            `Failed Extracting Dashboards: ${JSON.stringify(data, null, 1)}`
+          );
+        });
+    },
+    enabled: !!userId,
+    initialData: demo
+      ? [
+          {
+            id: 0,
+            name: "Demo",
+          },
+        ]
+      : undefined,
+    meta: {
+      errorMessage: "Failed Fetching Dashboards",
+    },
+  });
 
   return (
     <Box
@@ -114,17 +112,16 @@ const DashboardGrid: React.FC<IDashboardGridProps> = ({
         width: "100%",
       }}
     >
-      {!loading ? (
+      {!isPending ? (
         <TabContext value={curTab}>
           <DashboardControl
             curTab={curTab}
             setCurTab={setCurTab}
-            dashboards={dashboards}
-            setDashboards={setDashboards}
             disabled={demo}
+            dashboards={data || []}
           />
           {(userDetailsContext?.isAuthenticated || demo) &&
-            dashboards?.map((dashboard, index) => {
+            data?.map((dashboard, index) => {
               return (
                 <TabPanel
                   key={`TabPanels:${dashboard.name}${index}`}

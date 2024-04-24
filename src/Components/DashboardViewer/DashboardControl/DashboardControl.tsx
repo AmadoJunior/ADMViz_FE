@@ -1,7 +1,7 @@
 //Deps
 import React from "react";
 import toast from "react-hot-toast";
-
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 //MUI
 import { Box, Tab, Typography, useTheme } from "@mui/material";
 import { tabsClasses } from "@mui/material/Tabs";
@@ -72,18 +72,18 @@ interface IDashboardControlProps {
   children?: React.ReactNode;
   dashboards: IDashboard[];
   disabled?: boolean;
-  setDashboards: React.Dispatch<React.SetStateAction<IDashboard[]>>;
   curTab: string;
   setCurTab: React.Dispatch<React.SetStateAction<string>>;
 }
 
 const DashboardControl: React.FC<IDashboardControlProps> = ({
-  dashboards,
-  setDashboards,
   curTab,
   setCurTab,
   disabled,
+  dashboards,
 }): JSX.Element => {
+  const queryClient = useQueryClient();
+
   //Theme
   const theme = useTheme();
 
@@ -92,71 +92,70 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({
   const [newChartName, setNewChartName] = React.useState("");
 
   //Form Handlers
-  const handleNew = (dashboardName: string) => {
-    return fetch(`/api/dashboards`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: dashboardName,
-      }),
-    })
-      .then((res) => {
-        if (res.status === 200) {
-          return res.json();
-        } else if (res.status === 406) {
-          toast.error(`Dashboard Limit Reached`);
-        }
-        throw new Error(`Failed Creating Dashboard: ${res.status}`);
+  const newDashboardMutation = useMutation({
+    mutationKey: ["postDashboard"],
+    mutationFn: (dashboardName: string) => {
+      return fetch(`/api/dashboards`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: dashboardName,
+        }),
       })
-      .then((data) => {
-        if (data) {
-          setDashboards((prev) => [
-            ...prev,
-            {
-              id: data?.id,
-              name: data?.name,
-            },
-          ]);
-          return;
-        }
-        throw new Error(
-          `Failed Retrieving Created Dashboard: ${JSON.stringify(
-            data,
-            null,
-            1
-          )}`
-        );
-      })
-      .catch((e) => {
-        toast.error("Failed Creating Dashboard");
-        console.error(e);
-      });
-  };
-
-  const handleRemove = (dashboardId: number) => {
-    setRemoveLoading(true);
-    fetch(`/api/dashboards/${dashboardId}`, {
-      method: "DELETE",
-    })
-      .then((res) => {
-        if (res?.status === 200) {
-          setDashboards((prev) =>
-            prev.filter((value) => value?.id !== dashboardId)
+        .then((res) => {
+          if (res.status === 200) {
+            return res.json();
+          } else if (res.status === 406) {
+            toast.error(`Dashboard Limit Reached`);
+          }
+          throw new Error(`Failed Creating Dashboard: ${res.status}`);
+        })
+        .then((data) => {
+          if (data) {
+            queryClient.resetQueries({ queryKey: ["getDashboards"] });
+            return;
+          }
+          throw new Error(
+            `Failed Retrieving Created Dashboard: ${JSON.stringify(
+              data,
+              null,
+              1
+            )}`
           );
+        });
+    },
+    meta: {
+      errorMessage: "Error Creating Dashboard",
+    },
+  });
+
+  const removeDashboardMutation = useMutation({
+    mutationKey: ["deleteDashboard"],
+    mutationFn: (dashboardId: number) => {
+      return fetch(`/api/dashboards/${dashboardId}`, {
+        method: "DELETE",
+      }).then((res) => {
+        if (res?.status === 200) {
+          queryClient.resetQueries({ queryKey: ["getDashboards"] });
           setCurTab("0");
           return;
         }
         throw new Error(`Failed Removing Dashboard: ${res.status}`);
-      })
-      .catch((e) => {
-        toast.error("Failed Removing Dashboard");
-        console.error(e);
-      })
-      .finally(() => {
-        setRemoveLoading(false);
       });
+    },
+    meta: {
+      errorMessage: "Error Removing Dashboard",
+    },
+  });
+
+  const handleNew = (dashboardName: string) => {
+    return newDashboardMutation.mutateAsync(dashboardName);
+  };
+
+  const handleRemove = (dashboardId: number) => {
+    removeDashboardMutation.mutate(dashboardId);
   };
 
   //Event Handlers
@@ -198,7 +197,7 @@ const DashboardControl: React.FC<IDashboardControlProps> = ({
                   dashboardId={dashboard.id}
                   tabValue={String(index)}
                   curTab={curTab}
-                  isLoading={removalLoading}
+                  isLoading={removeDashboardMutation.isPending}
                   disabled={disabled}
                   onDelete={() => handleRemove(dashboard.id)}
                 />
